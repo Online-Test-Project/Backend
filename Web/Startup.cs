@@ -25,7 +25,7 @@ namespace Web
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseMvcWithDefaultRoute();
-        }
+        } 
 
     }
 }
