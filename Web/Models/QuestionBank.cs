@@ -8,6 +8,7 @@ namespace Web.Models
         public QuestionBank()
         {
             Question = new HashSet<Question>();
+            RandomExam = new HashSet<RandomExam>();
         }
 
         public Guid Id { get; set; }
@@ -16,5 +17,6 @@ namespace Web.Models
 
         public virtual Account Owner { get; set; }
         public virtual ICollection<Question> Question { get; set; }
+        public virtual ICollection<RandomExam> RandomExam { get; set; }
     }
 }
