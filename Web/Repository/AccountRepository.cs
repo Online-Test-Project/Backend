@@ -31,6 +31,7 @@ namespace Web.Repository
         {
             Account deleteAcount = DbContext.Accounts.Where(c => c.Id == accountId).FirstOrDefault();
             DbContext.Accounts.Remove(deleteAcount);
+            DbContext.SaveChanges();
             return true;
         }
 
