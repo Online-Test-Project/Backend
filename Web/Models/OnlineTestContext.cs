@@ -15,15 +15,15 @@ namespace Web.Models
         {
         }
 
-        public virtual DbSet<Account> Account { get; set; }
-        public virtual DbSet<Answer> Answer { get; set; }
-        public virtual DbSet<Exam> Exam { get; set; }
-        public virtual DbSet<ExamKit> ExamKit { get; set; }
-        public virtual DbSet<Question> Question { get; set; }
-        public virtual DbSet<QuestionBank> QuestionBank { get; set; }
-        public virtual DbSet<RandomExam> RandomExam { get; set; }
-        public virtual DbSet<Score> Score { get; set; }
-        public virtual DbSet<UserDetail> UserDetail { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Exam> Exams { get; set; }
+        public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<QuestionBank> QuestionBanks { get; set; }
+        public virtual DbSet<RandomExam> RandomExams { get; set; }
+        public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<UserDetail> UserDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,6 +40,8 @@ namespace Web.Models
 
             modelBuilder.Entity<Account>(entity =>
             {
+                entity.ToTable("Account");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.DateCreated).HasColumnType("date");
@@ -56,6 +58,8 @@ namespace Web.Models
 
             modelBuilder.Entity<Answer>(entity =>
             {
+                entity.ToTable("Answer");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Content)
@@ -64,7 +68,7 @@ namespace Web.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Question)
-                    .WithMany(p => p.Answer)
+                    .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Answer_Question");
@@ -72,27 +76,37 @@ namespace Web.Models
 
             modelBuilder.Entity<Exam>(entity =>
             {
+                entity.ToTable("Exam");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.Exam)
+                    .WithMany(p => p.Exams)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Exam_Account");
             });
 
-            modelBuilder.Entity<ExamKit>(entity =>
+            modelBuilder.Entity<ExamQuestion>(entity =>
             {
-                entity.HasKey(e => new { e.ExamId, e.QuestionId });
+                entity.HasKey(e => new { e.ExamId, e.QuestionId })
+                    .HasName("PK_ExamKit");
+
+                entity.ToTable("Exam_Question");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Exam)
-                    .WithMany(p => p.ExamKit)
+                    .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.ExamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ExamKit_Exam");
 
                 entity.HasOne(d => d.Question)
-                    .WithMany(p => p.ExamKit)
+                    .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.QuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ExamKit_Question");
@@ -100,6 +114,8 @@ namespace Web.Models
 
             modelBuilder.Entity<Question>(entity =>
             {
+                entity.ToTable("Question");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Difficulty)
@@ -108,7 +124,7 @@ namespace Web.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Bank)
-                    .WithMany(p => p.Question)
+                    .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.BankId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Question_QuestionBank");
@@ -116,12 +132,14 @@ namespace Web.Models
 
             modelBuilder.Entity<QuestionBank>(entity =>
             {
+                entity.ToTable("QuestionBank");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Subject).HasMaxLength(100);
 
                 entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.QuestionBank)
+                    .WithMany(p => p.QuestionBanks)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_QuestionBank_Account");
@@ -129,16 +147,18 @@ namespace Web.Models
 
             modelBuilder.Entity<RandomExam>(entity =>
             {
+                entity.ToTable("RandomExam");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Bank)
-                    .WithMany(p => p.RandomExam)
+                    .WithMany(p => p.RandomExams)
                     .HasForeignKey(d => d.BankId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RandomExam_Exam");
 
                 entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.RandomExam)
+                    .WithMany(p => p.RandomExams)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RandomExam_Account");
@@ -148,16 +168,24 @@ namespace Web.Models
             {
                 entity.HasKey(e => new { e.UserId, e.ExamId });
 
+                entity.ToTable("Score");
+
                 entity.Property(e => e.Score1).HasColumnName("Score");
 
                 entity.HasOne(d => d.Exam)
-                    .WithMany(p => p.Score)
+                    .WithMany(p => p.Scores)
                     .HasForeignKey(d => d.ExamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Score_Exam");
 
+                entity.HasOne(d => d.ExamNavigation)
+                    .WithMany(p => p.Scores)
+                    .HasForeignKey(d => d.ExamId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Score_RandomExam");
+
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Score)
+                    .WithMany(p => p.Scores)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Score_Account1");
@@ -166,6 +194,8 @@ namespace Web.Models
             modelBuilder.Entity<UserDetail>(entity =>
             {
                 entity.HasKey(e => e.UserId);
+
+                entity.ToTable("UserDetail");
 
                 entity.Property(e => e.UserId).ValueGeneratedNever();
 

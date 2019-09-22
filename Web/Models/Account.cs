@@ -7,10 +7,10 @@ namespace Web.Models
     {
         public Account()
         {
-            Exam = new HashSet<Exam>();
-            QuestionBank = new HashSet<QuestionBank>();
-            RandomExam = new HashSet<RandomExam>();
-            Score = new HashSet<Score>();
+            Exams = new HashSet<Exam>();
+            QuestionBanks = new HashSet<QuestionBank>();
+            RandomExams = new HashSet<RandomExam>();
+            Scores = new HashSet<Score>();
         }
 
         public Guid Id { get; set; }
@@ -19,9 +19,9 @@ namespace Web.Models
         public DateTime DateCreated { get; set; }
 
         public virtual UserDetail UserDetail { get; set; }
-        public virtual ICollection<Exam> Exam { get; set; }
-        public virtual ICollection<QuestionBank> QuestionBank { get; set; }
-        public virtual ICollection<RandomExam> RandomExam { get; set; }
-        public virtual ICollection<Score> Score { get; set; }
+        public virtual ICollection<Exam> Exams { get; set; }
+        public virtual ICollection<QuestionBank> QuestionBanks { get; set; }
+        public virtual ICollection<RandomExam> RandomExams { get; set; }
+        public virtual ICollection<Score> Scores { get; set; }
     }
 }

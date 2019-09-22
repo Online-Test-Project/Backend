@@ -7,15 +7,16 @@ namespace Web.Models
     {
         public Exam()
         {
-            ExamKit = new HashSet<ExamKit>();
-            Score = new HashSet<Score>();
+            ExamQuestions = new HashSet<ExamQuestion>();
+            Scores = new HashSet<Score>();
         }
 
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
+        public TimeSpan Time { get; set; }
 
         public virtual Account Owner { get; set; }
-        public virtual ICollection<ExamKit> ExamKit { get; set; }
-        public virtual ICollection<Score> Score { get; set; }
+        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
+        public virtual ICollection<Score> Scores { get; set; }
     }
 }

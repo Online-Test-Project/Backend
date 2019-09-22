@@ -7,8 +7,8 @@ namespace Web.Models
     {
         public Question()
         {
-            Answer = new HashSet<Answer>();
-            ExamKit = new HashSet<ExamKit>();
+            Answers = new HashSet<Answer>();
+            ExamQuestions = new HashSet<ExamQuestion>();
         }
 
         public Guid Id { get; set; }
@@ -17,7 +17,7 @@ namespace Web.Models
         public int Type { get; set; }
 
         public virtual QuestionBank Bank { get; set; }
-        public virtual ICollection<Answer> Answer { get; set; }
-        public virtual ICollection<ExamKit> ExamKit { get; set; }
+        public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
     }
 }
