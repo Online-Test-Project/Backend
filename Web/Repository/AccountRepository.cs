@@ -12,11 +12,31 @@ namespace Web.Repository
         Task<bool> Update(Account account);
         Task<bool> Delete(Guid accountId); 
     }
-    public class AccountRepository
+    public class AccountRepository : IAccountRepository
     {
-        public AccountRepository()
+        private OnlineTestContext DbContext;
+        public AccountRepository(OnlineTestContext _DbContext)
         {
-            
+            DbContext = _DbContext;
+        }
+
+        public async Task<bool> Create(Account account)
+        {
+            DbContext.Accounts.Add(account);
+            DbContext.SaveChanges();
+            return true;
+        }
+
+        public async Task<bool> Delete(Guid accountId)
+        {
+            Account deleteAcount = DbContext.Accounts.Where(c => c.Id == accountId).FirstOrDefault();
+            DbContext.Accounts.Remove(deleteAcount);
+            return true;
+        }
+
+        public Task<bool> Update(Account account)
+        {
+            throw new NotImplementedException();
         }
     }
 }
