@@ -136,7 +136,11 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Subject).HasMaxLength(100);
+                entity.Property(e => e.ModifiedDate).HasColumnType("date");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.QuestionBanks)
