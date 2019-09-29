@@ -13,7 +13,9 @@ namespace Web.Models
 
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
-        public string Subject { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public virtual Account Owner { get; set; }
         public virtual ICollection<Question> Questions { get; set; }

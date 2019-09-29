@@ -15,6 +15,7 @@ namespace Web.Models
         public Guid BankId { get; set; }
         public string Difficulty { get; set; }
         public int Type { get; set; }
+        public string Content { get; set; }
 
         public virtual QuestionBank Bank { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
