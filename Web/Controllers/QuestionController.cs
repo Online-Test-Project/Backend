@@ -9,7 +9,7 @@ namespace Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class QuestionController : ControllerBase
     {
     }
 }
