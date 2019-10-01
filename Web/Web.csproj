@@ -19,8 +19,4 @@
     <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="2.6.10" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
