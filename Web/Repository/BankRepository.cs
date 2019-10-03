@@ -1,53 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Web.Controllers.BankController;
 using Web.Models;
-using Web.Models.DTO;
 
 namespace Web.Repository
 {
     
     interface IBankRepository
     {
-        Boolean Create(BankDTO bank);
+        bool Create(BankDTO bank);
 
-        Task<bool> Update(BankDTO bank);
+        List<QuestionBank> Read(Guid userId);
 
-        Task<bool> Delete(Guid bankId);
+        bool Update(BankDTO bank);
 
+        bool Delete(Guid bankId);
     }
+
     public class BankRepository : IBankRepository
     {
-        Guid emptyGuid = new Guid("00000000-0000-0000-0000-000000000000");
+
         private OnlineTestContext DbContext;
+
         public BankRepository(OnlineTestContext _context)
         {
             DbContext = _context;
         }
-        public Boolean Create(BankDTO bank)
+
+        public bool Create(BankDTO bank)
         {
-            DbContext.QuestionBanks.Add(new QuestionBank
+            try
             {
-                Id = Guid.NewGuid(),
-                Description = bank.Description,
-                ModifiedDate = bank.ModifiedDate,
-                Name = bank.Name,
-                OwnerId = emptyGuid,
-            });
-            DbContext.SaveChanges();
-            return true;
-
+                DbContext.QuestionBanks.Add(new QuestionBank
+                {
+                    Id = Guid.NewGuid(),
+                    Description = bank.Description,
+                    ModifiedDate = bank.ModifiedDate,
+                    Name = bank.Name,
+                    OwnerId = bank.Id
+                });
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
-        public Task<bool> Delete(Guid bankId)
+        public List<QuestionBank> Read(Guid userId)
         {
-            throw new NotImplementedException();
+            var query =
+                from bank
+                in DbContext.QuestionBanks
+                where bank.OwnerId == userId
+                select bank;
+            return query.ToList();
         }
 
-        public Task<bool> Update(BankDTO bank)
+        public bool Delete(Guid bankId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query =
+                    from bank
+                    in DbContext.QuestionBanks
+                    where bank.Id == bankId
+                    select bank;
+                DbContext.QuestionBanks.Remove(query.First());
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }            
+        }
+
+        public bool Update(BankDTO bank)
+        {
+            try
+            {
+                var query =
+                    from b
+                    in DbContext.QuestionBanks
+                    where b.Id == bank.Id
+                    select b;
+                QuestionBank questionBank = query.First();
+
+                questionBank.Name = bank.Name;
+                questionBank.Description = bank.Description;
+                questionBank.ModifiedDate = bank.ModifiedDate;
+
+                DbContext.QuestionBanks.Update(questionBank);
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }

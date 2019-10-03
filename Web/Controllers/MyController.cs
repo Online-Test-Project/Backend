@@ -11,6 +11,6 @@ namespace Web.Controllers
     [ApiController]
     public class MyController : ControllerBase
     {
-
+        public Guid userId;
     }
 }
