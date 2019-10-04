@@ -12,11 +12,9 @@ namespace Web.Controllers.BankController
     [ApiController]
     public class BankController : MyController
     {
-        private OnlineTestContext DbContext;
 
-        public BankController(OnlineTestContext context)
+        public BankController(OnlineTestContext _context) : base(_context)
         {
-            this.DbContext = context;
         }
 
         [HttpGet]
