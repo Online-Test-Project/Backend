@@ -13,12 +13,5 @@ namespace Web.Controllers.BankController
         public String Description { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public BankDTO(QuestionBank bank)
-        {
-            Id = bank.Id;
-            Name = bank.Name;
-            Description = bank.Description;
-            ModifiedDate = bank.ModifiedDate;
-        }
     }
 }

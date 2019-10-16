@@ -6,14 +6,13 @@ using Web.Models;
 
 namespace Web.Repository
 {
-    
     interface IBankRepository
     {
-        bool Create(BankDTO bank);
+        bool Create(QuestionBank bank);
 
         List<QuestionBank> Read(Guid userId);
 
-        bool Update(BankDTO bank);
+        bool Update(QuestionBank bank);
 
         bool Delete(Guid bankId);
     }
@@ -28,18 +27,11 @@ namespace Web.Repository
             DbContext = _context;
         }
 
-        public bool Create(BankDTO bank)
+        public bool Create(QuestionBank bank)
         {
             try
             {
-                DbContext.QuestionBanks.Add(new QuestionBank
-                {
-                    Id = Guid.NewGuid(),
-                    Description = bank.Description,
-                    ModifiedDate = bank.ModifiedDate,
-                    Name = bank.Name,
-                    OwnerId = bank.Id
-                });
+                DbContext.QuestionBanks.Add(bank);
                 DbContext.SaveChanges();
                 return true;
             }
@@ -78,22 +70,11 @@ namespace Web.Repository
             }            
         }
 
-        public bool Update(BankDTO bank)
+        public bool Update(QuestionBank bank)
         {
             try
             {
-                var query =
-                    from b
-                    in DbContext.QuestionBanks
-                    where b.Id == bank.Id
-                    select b;
-                QuestionBank questionBank = query.First();
-
-                questionBank.Name = bank.Name;
-                questionBank.Description = bank.Description;
-                questionBank.ModifiedDate = bank.ModifiedDate;
-
-                DbContext.QuestionBanks.Update(questionBank);
+                DbContext.QuestionBanks.Update(bank);
                 DbContext.SaveChanges();
                 return true;
             }
