@@ -15,7 +15,7 @@ namespace Web.Models
         public Guid OwnerId { get; set; }
         public TimeSpan Time { get; set; }
 
-        public virtual Account Owner { get; set; }
+        public virtual User Owner { get; set; }
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
         public virtual ICollection<Score> Scores { get; set; }
     }

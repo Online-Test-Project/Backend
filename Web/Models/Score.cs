@@ -12,6 +12,6 @@ namespace Web.Models
 
         public virtual Exam Exam { get; set; }
         public virtual RandomExam ExamNavigation { get; set; }
-        public virtual Account User { get; set; }
+        public virtual User User { get; set; }
     }
 }

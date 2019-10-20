@@ -19,7 +19,7 @@ namespace Web.Models
         public TimeSpan Time { get; set; }
 
         public virtual QuestionBank Bank { get; set; }
-        public virtual Account Owner { get; set; }
+        public virtual User Owner { get; set; }
         public virtual ICollection<Score> Scores { get; set; }
     }
 }

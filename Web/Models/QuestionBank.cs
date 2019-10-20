@@ -17,7 +17,7 @@ namespace Web.Models
         public string Description { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public virtual Account Owner { get; set; }
+        public virtual User Owner { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<RandomExam> RandomExams { get; set; }
     }

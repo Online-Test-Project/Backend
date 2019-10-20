@@ -13,7 +13,7 @@ namespace Web.Models
 
         public Guid Id { get; set; }
         public Guid BankId { get; set; }
-        public string Difficulty { get; set; }
+        public int Difficulty { get; set; }
         public int Type { get; set; }
         public string Content { get; set; }
 

@@ -15,7 +15,6 @@ namespace Web.Models
         {
         }
 
-        public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
         public virtual DbSet<Exam> Exams { get; set; }
         public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
@@ -23,38 +22,21 @@ namespace Web.Models
         public virtual DbSet<QuestionBank> QuestionBanks { get; set; }
         public virtual DbSet<RandomExam> RandomExams { get; set; }
         public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserDetail> UserDetails { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("data source=localhost;initial catalog=OnlineTest;persist security info=True;user id=sa;password=123456a@;multipleactiveresultsets=True;");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("data source=localhost;initial catalog=OnlineTest;persist security info=True;user id=sa;password=123456a@;multipleactiveresultsets=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
-
-            modelBuilder.Entity<Account>(entity =>
-            {
-                entity.ToTable("Account");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.DateCreated).HasColumnType("date");
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.Username)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
 
             modelBuilder.Entity<Answer>(entity =>
             {
@@ -117,11 +99,6 @@ namespace Web.Models
                 entity.ToTable("Question");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Difficulty)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Bank)
                     .WithMany(p => p.Questions)
@@ -193,6 +170,24 @@ namespace Web.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Score_Account1");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("User");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.DateCreated).HasColumnType("date");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserDetail>(entity =>
