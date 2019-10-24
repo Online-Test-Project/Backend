@@ -12,8 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Web.Authentication;
+using Web.AppStart;
+using Web.Common;
 using Web.Models;
+using Web.Services;
 
 namespace Web
 {
@@ -25,47 +27,52 @@ namespace Web
             configuration = _configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            JwtSettings jwtSettings = new JwtSettings();
-            configuration.Bind(nameof(jwtSettings), jwtSettings);
-            services.AddSingleton(jwtSettings);
-
-            services.AddAuthentication(x =>
+            // CP
+            services.AddSingleton<IJWTHandler, JWTHandler>();
+            services.AddCors(options =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-               {
-                   x.SaveToken = true;
-                   x.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateIssuerSigningKey = true,
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.secretKey)),
-                       ValidateIssuer = false,
-                       RequireExpirationTime = false,
-                       ValidateLifetime = true
-                   };
-               });
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                .Build());
+            });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            var sp = services.BuildServiceProvider();
+            var JWTHandler = sp.GetRequiredService<IJWTHandler>();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new ExceptionResponseAttribute()); // an instance
+                options.Filters.Add(new AuthenticationFilter(configuration, JWTHandler));
+            });
+
+            // END CP
 
             services.AddDbContext<OnlineTestContext>(options =>
                options.UseSqlServer(configuration.GetConnectionString("OnlineTestContext")));
             services.AddMvc();
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<ITransientService>()
+                    .AddClasses(classes => classes.AssignableTo<ITransientService>())
+                        .AsImplementedInterfaces()
+                        .WithTransientLifetime()
+                    .AddClasses(classes => classes.AssignableTo<IScopedService>())
+                        .As<IScopedService>()
+                        .WithScopedLifetime());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseMvcWithDefaultRoute();
-            app.UseAuthentication();
-        } 
+            app.UseAuthentication();        } 
 
     }
 }

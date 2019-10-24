@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.AppStart;
 using Web.Models;
 
 namespace Web.Controllers
@@ -17,6 +18,6 @@ namespace Web.Controllers
         {
             DbContext = _context;
         }
-        public Guid userId;
+        public UserDTO user => (User as MyPrincipal)?.UserEntity;
     }
 }

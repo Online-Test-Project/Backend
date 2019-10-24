@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Web.AppStart;
+using Web.Common;
 using Web.Controllers.BankController;
 using Web.Models;
 
 namespace Web.Repository
 {
-    interface IBankRepository
+    interface IBankRepository : IScopedService
     {
-        bool Create(QuestionBank bank);
-
-        List<QuestionBank> Read(Guid userId);
-
-        bool Update(QuestionBank bank);
-
-        bool Delete(Guid bankId);
+        int Count(UserDTO user);
     }
 
     public class BankRepository : IBankRepository
@@ -27,61 +23,11 @@ namespace Web.Repository
             DbContext = _context;
         }
 
-        public bool Create(QuestionBank bank)
+        public int Count(UserDTO user)
         {
-            try
-            {
-                DbContext.QuestionBanks.Add(bank);
-                DbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-
-        public List<QuestionBank> Read(Guid userId)
-        {
-            var query =
-                from bank
-                in DbContext.QuestionBanks
-                where bank.OwnerId == userId
-                select bank;
-            return query.ToList();
-        }
-
-        public bool Delete(Guid bankId)
-        {
-            try
-            {
-                var query =
-                    from bank
-                    in DbContext.QuestionBanks
-                    where bank.Id == bankId
-                    select bank;
-                DbContext.QuestionBanks.Remove(query.First());
-                DbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }            
-        }
-
-        public bool Update(QuestionBank bank)
-        {
-            try
-            {
-                DbContext.QuestionBanks.Update(bank);
-                DbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            var temp = DbContext.QuestionBanks.Where(b => b.OwnerId == user.UserId).Select(x => x.Id);
+            int returnn = temp.Count();
+            return returnn;
         }
     }
 }

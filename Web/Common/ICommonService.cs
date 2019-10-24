@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Web.Authentication
+namespace Web.Common
 {
-    public class JwtSettings
+    public interface ITransientService
     {
-        public string secretKey { get; set; }
+    }
+    public interface IScopedService
+    {
     }
 }
