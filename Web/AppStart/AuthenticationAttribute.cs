@@ -30,7 +30,7 @@ namespace Web.AppStart
 
         public void OnActionExecuting(ActionExecutingContext FilterContext)
         {
-            if (FilterContext.HttpContext.Request.Path.Value.StartsWith("/Login"))
+            if (FilterContext.HttpContext.Request.Path.Value.EndsWith("/Login"))
                 return;
             var Token = FilterContext.HttpContext.Request.Cookies["JWT"];
             var JWTEntity = JWTHandler.Decode(Token);
@@ -204,8 +204,9 @@ namespace Web.AppStart
             }
 
         }
-        public string CreateToken(UserDTO UserDTO)
+        public string CreateToken(UserDTO user)
         {
+
             if (_signingCredentials == null) throw new BadRequestException("Server khong tao duoc token");
             var nowUtc = DateTime.UtcNow;
             var expires = nowUtc.AddDays(30);
@@ -215,8 +216,8 @@ namespace Web.AppStart
             var issuer = string.Empty;
             var payload = new JwtPayload
             {
-                {"UserDTO", UserDTO},
-                {"unique_name", UserDTO.UserId},
+                {"user", user},
+                {"unique_name", user.Id},
                 {"iss", issuer},
                 {"iat", now},
                 //{"nbf", now},

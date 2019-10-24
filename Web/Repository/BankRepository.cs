@@ -33,7 +33,7 @@ namespace Web.Repository
 
         public int Count(UserDTO user)
         {
-            var temp = DbContext.QuestionBanks.Where(b => b.OwnerId == user.UserId).Select(x => x.Id);
+            var temp = DbContext.QuestionBanks.Where(b => b.OwnerId == user.Id).Select(x => x.Id);
             int returnn = temp.Count();
             return returnn;
         }

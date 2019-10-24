@@ -39,6 +39,7 @@ namespace Web.Services
                 throw new BadRequestException("User không tồn tại.");
             if (!User.Password.Equals(user.Password))
                 throw new BadRequestException("Bạn nhập sai Password.");
+            user.Id = User.Id;
             return JWTHandler.CreateToken(user);
         }
 

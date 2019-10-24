@@ -9,7 +9,7 @@ namespace Web.AppStart
     {
         public string Username { get; set; }
         public string Password { set; get; }
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
     }
 }
