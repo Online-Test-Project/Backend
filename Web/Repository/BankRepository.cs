@@ -11,6 +11,14 @@ namespace Web.Repository
     interface IBankRepository : IScopedService
     {
         int Count(UserDTO user);
+
+        bool Create(BankDTO bank);
+
+        List<QuestionBank> List(Guid userId);
+
+        // bool Update(BankDTO bank);
+
+        bool Delete(Guid bankId);
     }
 
     public class BankRepository : IBankRepository
@@ -29,5 +37,42 @@ namespace Web.Repository
             int returnn = temp.Count();
             return returnn;
         }
+
+        public bool Create(BankDTO bank)
+        {
+            try
+            {
+                DbContext.QuestionBanks.Add(new QuestionBank
+                {
+                    Id = Guid.NewGuid(),
+                    Description = bank.Description,
+                    ModifiedDate = bank.ModifiedDate,
+                    Name = bank.Name,
+                    OwnerId = bank.Id
+                });
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public List<QuestionBank> List(Guid userId)
+        {
+            var query =
+                from bank
+                in DbContext.QuestionBanks
+                where bank.OwnerId == userId
+                select bank;
+            return query.ToList();
+        }
+
+        public bool Delete(Guid bankId)
+        {
+            return true;
+        }
+        
     }
 }
