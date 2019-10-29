@@ -7,15 +7,15 @@ using Web.Models;
 
 namespace Web.Repository
 {
-    interface IAnswerRepository
+    interface IAnswerRepository : IScopedService
     {
-        bool Create(List<Answer> answers);
+        bool Create(List<Answer> newAnswers);
 
-        List<Answer> List(Guid questionId);
+        List<Answer> ListByQuestionId(Guid questionId);
 
-        bool Delete(Guid questionId);
+        bool DeleteByQuestionId(Guid questionId);
 
-        bool Update(List<Answer> answers);
+        bool Update(List<Answer> updatedAnswers);
     }
 
     public class AnswerRepository : IAnswerRepository
@@ -27,21 +27,11 @@ namespace Web.Repository
             DbContext = _DbContext;
         }
 
-        public List<Answer> List(Guid questionId)
-        {
-            var query =
-                from a
-                in DbContext.Answers
-                where a.Id == questionId
-                select a;
-            return query.ToList();
-        }
-
-        public bool Create(List<Answer> answers)
+        public bool Create(List<Answer> newAnswers)
         {
             try
             {
-                foreach (Answer answer in answers)
+                foreach (Answer answer in newAnswers)
                 {
                     DbContext.Answers.Add(answer);
                 }
@@ -54,15 +44,25 @@ namespace Web.Repository
             }
         }
 
-        public bool Delete(Guid questionId)
+        public List<Answer> ListByQuestionId(Guid questionId)
+        {
+            var query =
+                from answer
+                in DbContext.Answers
+                where answer.Id == questionId
+                select answer;
+            return query.ToList();
+        }
+
+        public bool DeleteByQuestionId(Guid questionId)
         {
             try
             {
                 var query =
-                    from q
+                    from answer
                     in DbContext.Answers
-                    where q.Id == questionId
-                    select q;
+                    where answer.QuestionId == questionId
+                    select answer;
                 foreach (Answer answer in query)
                 {
                     DbContext.Answers.Remove(answer);
@@ -76,22 +76,22 @@ namespace Web.Repository
             }
         }
 
-        public bool Update(List<Answer> answers)
+        public bool Update(List<Answer> updatedAnswers)
         {
-            Guid questionId = answers.First().QuestionId;
+            Guid questionId = updatedAnswers.First().QuestionId;
             try
             {
                 var query =
-                    from q
+                    from answer
                     in DbContext.Answers
-                    where q.Id == questionId
-                    select q;
+                    where answer.QuestionId == questionId
+                    select answer;
                 foreach (Answer answer in query)
                 {
                     DbContext.Answers.Remove(answer);
                 }
 
-                foreach (Answer answer in answers)
+                foreach (Answer answer in updatedAnswers)
                 {
                     DbContext.Answers.Add(answer);
                 }
