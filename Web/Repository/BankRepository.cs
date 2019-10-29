@@ -10,13 +10,13 @@ namespace Web.Repository
 {
     interface IBankRepository : IScopedService
     {
-        int Count(UserDTO user);
+        int CountByOwnerId(Guid ownerId);
 
-        bool Create(BankDTO bank);
+        bool Create(QuestionBank newBank);
 
-        List<QuestionBank> List(Guid userId);
+        List<QuestionBank> ListByOwnerId(Guid ownerId);
 
-        // bool Update(BankDTO bank);
+        bool Update(QuestionBank updatedBank);
 
         bool Delete(Guid bankId);
     }
@@ -31,25 +31,20 @@ namespace Web.Repository
             DbContext = _context;
         }
 
-        public int Count(UserDTO user)
+        public int CountByOwnerId(Guid ownerId)
         {
-            var temp = DbContext.QuestionBanks.Where(b => b.OwnerId == user.Id).Select(x => x.Id);
-            int returnn = temp.Count();
-            return returnn;
+            var query = from bank
+                        in DbContext.QuestionBanks
+                        where bank.OwnerId == ownerId
+                        select bank.Id;
+            return query.Count();
         }
 
-        public bool Create(BankDTO bank)
+        public bool Create(QuestionBank newBank)
         {
             try
             {
-                DbContext.QuestionBanks.Add(new QuestionBank
-                {
-                    Id = Guid.NewGuid(),
-                    Description = bank.Description,
-                    ModifiedDate = bank.ModifiedDate,
-                    Name = bank.Name,
-                    OwnerId = bank.Id
-                });
+                DbContext.QuestionBanks.Add(newBank);
                 DbContext.SaveChanges();
                 return true;
             }
@@ -59,20 +54,47 @@ namespace Web.Repository
             }
         }
 
-        public List<QuestionBank> List(Guid userId)
+        public List<QuestionBank> ListByOwnerId(Guid ownerId)
         {
             var query =
                 from bank
                 in DbContext.QuestionBanks
-                where bank.OwnerId == userId
+                where bank.OwnerId == ownerId
                 select bank;
             return query.ToList();
         }
 
+        public bool Update(QuestionBank updatedBank)
+        {
+            try
+            {
+                DbContext.QuestionBanks.Update(updatedBank);
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public bool Delete(Guid bankId)
         {
-            return true;
+            try
+            {
+                var query =
+                    from bank
+                    in DbContext.QuestionBanks
+                    where bank.Id == bankId
+                    select bank;
+                DbContext.QuestionBanks.Remove(query.First());
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
-        
     }
 }
