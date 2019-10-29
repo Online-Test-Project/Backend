@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Web.Models;
+using Web.Common;
 using System.Linq;
 
 namespace Web.Repository
 {
-    interface IQuestionRepository
+    interface IQuestionRepository : IScopedService
     {
-        List<Question> List(Guid bankId);
+        List<Question> ListByBankId(Guid bankId);
 
-        Question Read(Guid questionId);
+        Question GetById(Guid questionId);
 
-        bool Update(Question question);
+        bool Update(Question updatedQuestion);
 
-        bool Create(Question question);
+        bool Create(Question newQuestion);
 
         bool Delete(Guid questionId);
     }
@@ -28,31 +29,31 @@ namespace Web.Repository
             DbContext = _context;
         }
 
-        public List<Question> List(Guid bankId)
+        public List<Question> ListByBankId(Guid bankId)
         {
             var query =
-                from q
+                from question
                 in DbContext.Questions
-                where q.BankId == bankId
-                select q;
+                where question.BankId == bankId
+                select question;
             return query.ToList();
         }
 
-        public Question Read(Guid questionId)
+        public Question GetById(Guid questionId)
         {
             var query =
-                from q
+                from question
                 in DbContext.Questions
-                where q.Id == questionId
-                select q;
+                where question.Id == questionId
+                select question;
             return query.First();
         }
 
-        public bool Update(Question question)
+        public bool Update(Question updatedQuestion)
         {
             try
             {
-                DbContext.Questions.Update(question);
+                DbContext.Questions.Update(updatedQuestion);
                 DbContext.SaveChanges();
                 return true;
             }
@@ -62,11 +63,11 @@ namespace Web.Repository
             }
         }
 
-        public bool Create(Question question)
+        public bool Create(Question newQuestion)
         {
             try
             {
-                DbContext.Questions.Add(question);
+                DbContext.Questions.Add(newQuestion);
                 DbContext.SaveChanges();
                 return true;
             }
@@ -81,10 +82,10 @@ namespace Web.Repository
             try
             {
                 var query =
-                    from q
+                    from question
                     in DbContext.Questions
-                    where q.Id == questionId
-                    select q;
+                    where question.Id == questionId
+                    select question;
                 DbContext.Questions.Remove(query.First());
                 DbContext.SaveChanges();
                 return true;

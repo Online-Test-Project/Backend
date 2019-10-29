@@ -24,13 +24,14 @@ namespace Web.Controllers.QuestionController
             IQuestionRepository questionRepository = new QuestionRepository(DbContext);
             IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
-            List<Question> questions = questionRepository.List(bankId);
+            List<Question> questions = questionRepository.ListByBankId(bankId);
             List<QuestionDTO> result = new List<QuestionDTO>();
 
             foreach (Question question in questions)
             {
-                List<Answer> answers = answerRepository.List(question.Id);
+                List<Answer> answers = answerRepository.ListByQuestionId(question.Id);
                 List<AnswerDTO> answerDTOs = new List<AnswerDTO>();
+
                 foreach (Answer a in answers)
                 {
                     answerDTOs.Add(new AnswerDTO
@@ -39,6 +40,7 @@ namespace Web.Controllers.QuestionController
                         IsCorrect = a.IsCorrect
                     });
                 }
+
                 result.Add(new QuestionDTO
                 {
                     Id = question.Id,
@@ -57,23 +59,23 @@ namespace Web.Controllers.QuestionController
             IQuestionRepository questionRepository = new QuestionRepository(DbContext);
             IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
-            List<Answer> updateAnswers = new List<Answer>();
-            foreach (AnswerDTO a in questionDTO.Answers)
+            List<Answer> updatedAnswers = new List<Answer>();
+            foreach (AnswerDTO answerDTO in questionDTO.Answers)
             {
-                updateAnswers.Add(new Answer
+                updatedAnswers.Add(new Answer
                 {
                     Id = Guid.NewGuid(),
-                    Content = a.Content,
-                    IsCorrect = a.IsCorrect,
-                    QuestionId = questionDTO.Id
+                    QuestionId = questionDTO.Id,
+                    Content = answerDTO.Content,
+                    IsCorrect = answerDTO.IsCorrect                    
                 });
             }
 
-            Question updateQuestion = questionRepository.Read(questionDTO.Id);
-            updateQuestion.Content = questionDTO.Content;
-            updateQuestion.Difficulty = questionDTO.Difficulty;
+            Question updatedQuestion = questionRepository.GetById(questionDTO.Id);
+            updatedQuestion.Content = questionDTO.Content;
+            updatedQuestion.Difficulty = questionDTO.Difficulty;
 
-            return answerRepository.Update(updateAnswers) && questionRepository.Update(updateQuestion);
+            return answerRepository.Update(updatedAnswers) && questionRepository.Update(updatedQuestion);
         }
 
         public bool Create(QuestionDTO questionDTO)
@@ -81,8 +83,7 @@ namespace Web.Controllers.QuestionController
             IQuestionRepository questionRepository = new QuestionRepository(DbContext);
             IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
-            Question newQuestion = new Question
-            {
+            Question newQuestion = new Question {
                 Id = Guid.NewGuid(),
                 BankId = questionDTO.Id,
                 Difficulty = questionDTO.Difficulty,
@@ -91,14 +92,14 @@ namespace Web.Controllers.QuestionController
             };
 
             List<Answer> newAnswers = new List<Answer>();
-            foreach (AnswerDTO a in questionDTO.Answers)
+            foreach (AnswerDTO answerDTO in questionDTO.Answers)
             {
                 newAnswers.Add(new Answer
                 {
                     Id = Guid.NewGuid(),
-                    Content = a.Content,
-                    IsCorrect = a.IsCorrect,
-                    QuestionId = newQuestion.Id
+                    QuestionId = newQuestion.Id,
+                    Content = answerDTO.Content,
+                    IsCorrect = answerDTO.IsCorrect                    
                 });
             }
             return questionRepository.Create(newQuestion) && answerRepository.Create(newAnswers);
@@ -109,7 +110,7 @@ namespace Web.Controllers.QuestionController
             IQuestionRepository questionRepository = new QuestionRepository(DbContext);
             IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
-            return answerRepository.Delete(questionId) && questionRepository.Delete(questionId);
+            return answerRepository.DeleteByQuestionId(questionId) && questionRepository.Delete(questionId);
         }
     }
 }
