@@ -20,7 +20,7 @@ namespace Web.Controllers.BankController
         }
 
         [HttpGet]
-        public List<BankDTO> Count()
+        public List<BankDTO> List()
         {
             IBankRepository repository = new BankRepository(DbContext);
             List<QuestionBank> list = repository.ListByOwnerId(user.Id);
