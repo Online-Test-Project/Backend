@@ -14,15 +14,15 @@ namespace Web.Controllers.BankController
     // Every Controller inherit MyController to get user.
     public class BankController : MyController
     {
-
-        public BankController(OnlineTestContext _context) : base(_context)
+        IBankRepository repository;
+        public BankController(IBankRepository repository)
         {
+            this.repository = repository;
         }
 
         [HttpGet]
         public List<BankDTO> List()
         {
-            IBankRepository repository = new BankRepository(DbContext);
             List<QuestionBank> list = repository.ListByOwnerId(user.Id);
             List<BankDTO> result = new List<BankDTO>();
             foreach (QuestionBank bank in list) {
@@ -40,7 +40,6 @@ namespace Web.Controllers.BankController
         [HttpPost]
         public bool Create(BankDTO bank)
         {
-            IBankRepository repository = new BankRepository(DbContext);
             QuestionBank newBank = new QuestionBank {
                 Id = Guid.NewGuid(),
                 OwnerId = user.Id,
@@ -54,7 +53,6 @@ namespace Web.Controllers.BankController
         [HttpPost]
         public bool Update(BankDTO bank)
         {
-            IBankRepository repository = new BankRepository(DbContext);
             QuestionBank updatedBank = new QuestionBank
             {
                 Id = bank.Id,
@@ -69,7 +67,6 @@ namespace Web.Controllers.BankController
         [HttpPost]
         public bool Delete(Guid bankId)
         {
-            IBankRepository repository = new BankRepository(DbContext);
             return repository.Delete(bankId);
         }
     }

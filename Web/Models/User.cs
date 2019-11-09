@@ -17,7 +17,6 @@ namespace Web.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime DateCreated { get; set; }
-        public string Token { get; set; }
 
         public virtual UserDetail UserDetail { get; set; }
         public virtual ICollection<Exam> Exams { get; set; }

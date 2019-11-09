@@ -13,11 +13,6 @@ namespace Web.Controllers
     [ApiController]
     public class MyController : ControllerBase
     {
-        protected OnlineTestContext DbContext;
-        public MyController(OnlineTestContext _context)
-        {
-            DbContext = _context;
-        }
         public UserDTO user => (User as MyPrincipal)?.UserEntity;
     }
 }

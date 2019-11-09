@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Web.Repository
 {
-    interface IQuestionRepository : IScopedService
+    public interface IQuestionRepository : ITransientService
     {
         List<Question> ListByBankId(Guid bankId);
 

@@ -12,17 +12,19 @@ namespace Web.Controllers.QuestionController
     [ApiController]
     public class QuestionController : MyController
     {
-        public QuestionController(OnlineTestContext _context) : base(_context)
+        private IQuestionRepository questionRepository;
+        private IAnswerRepository answerRepository;
+        public QuestionController(IQuestionRepository questionRepository, IAnswerRepository answerRepository)
         {
-            
+            this.questionRepository = questionRepository;
+            this.answerRepository = answerRepository;
         }
 
         [Route("{id}")]
         [HttpGet]
         public List<QuestionDTO> List(Guid bankId)
         {
-            IQuestionRepository questionRepository = new QuestionRepository(DbContext);
-            IAnswerRepository answerRepository = new AnswerRepository(DbContext);
+            
 
             List<Question> questions = questionRepository.ListByBankId(bankId);
             List<QuestionDTO> result = new List<QuestionDTO>();
@@ -56,8 +58,6 @@ namespace Web.Controllers.QuestionController
 
         public bool Update(QuestionDTO questionDTO)
         {
-            IQuestionRepository questionRepository = new QuestionRepository(DbContext);
-            IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
             List<Answer> updatedAnswers = new List<Answer>();
             foreach (AnswerDTO answerDTO in questionDTO.Answers)
@@ -80,8 +80,6 @@ namespace Web.Controllers.QuestionController
 
         public bool Create(QuestionDTO questionDTO)
         {
-            IQuestionRepository questionRepository = new QuestionRepository(DbContext);
-            IAnswerRepository answerRepository = new AnswerRepository(DbContext);
 
             Question newQuestion = new Question {
                 Id = Guid.NewGuid(),
@@ -107,9 +105,6 @@ namespace Web.Controllers.QuestionController
 
         public bool Delete(Guid questionId)
         {
-            IQuestionRepository questionRepository = new QuestionRepository(DbContext);
-            IAnswerRepository answerRepository = new AnswerRepository(DbContext);
-
             return answerRepository.DeleteByQuestionId(questionId) && questionRepository.Delete(questionId);
         }
     }

@@ -62,6 +62,16 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.Code).HasMaxLength(10);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasMaxLength(50);
+
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Exams)
                     .HasForeignKey(d => d.OwnerId)

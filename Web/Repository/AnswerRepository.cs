@@ -7,7 +7,7 @@ using Web.Models;
 
 namespace Web.Repository
 {
-    interface IAnswerRepository : IScopedService
+    public interface IAnswerRepository : ITransientService
     {
         bool Create(List<Answer> newAnswers);
 

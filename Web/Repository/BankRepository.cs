@@ -8,7 +8,7 @@ using Web.Models;
 
 namespace Web.Repository
 {
-    interface IBankRepository : IScopedService
+    public interface IBankRepository : ITransientService
     {
         int CountByOwnerId(Guid ownerId);
 
