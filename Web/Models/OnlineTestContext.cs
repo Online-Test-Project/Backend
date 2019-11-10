@@ -64,12 +64,21 @@ namespace Web.Models
 
                 entity.Property(e => e.Code).HasMaxLength(10);
 
+                entity.Property(e => e.EndTime).HasMaxLength(50);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Password)
+                    .IsRequired()
                     .HasColumnName("password")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.StartTime).HasMaxLength(50);
+
+                entity.Property(e => e.Time)
+                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.Owner)
@@ -87,7 +96,6 @@ namespace Web.Models
                 entity.ToTable("Exam_Question");
 
                 entity.Property(e => e.Code)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -142,6 +150,14 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Time)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
                 entity.HasOne(d => d.Bank)
                     .WithMany(p => p.RandomExams)
                     .HasForeignKey(d => d.BankId)
@@ -162,6 +178,10 @@ namespace Web.Models
                 entity.ToTable("Score");
 
                 entity.Property(e => e.Score1).HasColumnName("Score");
+
+                entity.Property(e => e.Time)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.Scores)

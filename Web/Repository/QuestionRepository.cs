@@ -17,6 +17,8 @@ namespace Web.Repository
         bool Create(Question newQuestion);
 
         bool Delete(Guid questionId);
+
+        List<Question> ListByExamId(Guid examId);
     }
 
     public class QuestionRepository : IQuestionRepository
@@ -96,5 +98,11 @@ namespace Web.Repository
             }
         }
 
+        public List<Question> ListByExamId(Guid examId)
+        {
+            List<Question> returnList = new List<Question>();
+            returnList = DbContext.Questions.Where(x => x.ExamQuestions.Any(y => y.ExamId == examId)).ToList();
+            return returnList;
+        }
     }
 }

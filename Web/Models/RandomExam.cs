@@ -16,7 +16,8 @@ namespace Web.Models
         public int NumberOfEasyQuestion { get; set; }
         public int NumberOfNormalQuestion { get; set; }
         public int NumberOfHardQuestion { get; set; }
-        public TimeSpan Time { get; set; }
+        public string Time { get; set; }
+        public string Password { get; set; }
 
         public virtual QuestionBank Bank { get; set; }
         public virtual User Owner { get; set; }
