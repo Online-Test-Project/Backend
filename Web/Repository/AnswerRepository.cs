@@ -49,7 +49,7 @@ namespace Web.Repository
             var query =
                 from answer
                 in DbContext.Answers
-                where answer.Id == questionId
+                where answer.QuestionId == questionId
                 select answer;
             return query.ToList();
         }
@@ -58,11 +58,12 @@ namespace Web.Repository
         {
             try
             {
-                var query =
-                    from answer
-                    in DbContext.Answers
-                    where answer.QuestionId == questionId
-                    select answer;
+                //var query =
+                //    from answer
+                //    in DbContext.Answers
+                //    where answer.QuestionId == questionId
+                //    select answer;
+                var query = DbContext.Answers.Where(x => x.QuestionId == questionId);
                 foreach (Answer answer in query)
                 {
                     DbContext.Answers.Remove(answer);

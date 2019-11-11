@@ -30,9 +30,9 @@ namespace Web.AppStart
 
         public void OnActionExecuting(ActionExecutingContext FilterContext)
         {
-            if (FilterContext.HttpContext.Request.Path.Value.EndsWith("/Login"))
+            if (FilterContext.HttpContext.Request.Path.Value.ToLower().EndsWith("/login") )
                 return;
-            var Token = FilterContext.HttpContext.Request.Cookies["JWT"];
+            var Token = FilterContext.HttpContext.Request.Headers["JWT"];;   
             var JWTEntity = JWTHandler.Decode(Token);
             if (JWTEntity != null)
             {
@@ -53,7 +53,7 @@ namespace Web.AppStart
             {
                 if (FilterContext.HttpContext.Request.Path.Value.StartsWith("api"))
                     throw new ForbiddenException("Cookie không hợp lệ");
-                FilterContext.Result = new RedirectResult("/Login");
+                FilterContext.Result = new RedirectResult("/login");
             }
         }
 

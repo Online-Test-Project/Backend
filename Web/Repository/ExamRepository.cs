@@ -15,6 +15,8 @@ namespace Web.Repository
         List<Exam> ListByUserId(Guid userId);
         bool Create(ExamDTO exam, Guid userId);
         bool CreateRandom(RandomExamDTO randomExamDTO, Guid userId);
+        List<RandomExam> ListRandomByUserId(Guid userId);
+        RandomExam GetRandomExam(Guid examId); //ExamId
     }
     public class ExamRepository : IExamRepository
     {
@@ -82,5 +84,14 @@ namespace Web.Repository
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        public List<RandomExam> ListRandomByUserId(Guid userId)
+        {
+            return DbContext.RandomExams.Where(x => x.OwnerId == userId).ToList();
+        }
+
+        public RandomExam GetRandomExam(Guid examId)
+        {
+            return DbContext.RandomExams.Where(x => x.Id == examId).FirstOrDefault();
+        }
     }
 }

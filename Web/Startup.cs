@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,6 +66,10 @@ namespace Web
                     .AddClasses(classes => classes.AssignableTo<IScopedService>())
                         .As<IScopedService>()
                         .WithScopedLifetime());
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("CorsPolicy"));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -71,8 +77,12 @@ namespace Web
 
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
+            app.UseCors("CorsPolicy");
             app.UseMvcWithDefaultRoute();
-            app.UseAuthentication();        } 
+            app.UseAuthentication();
+
+
+        } 
 
     }
 }

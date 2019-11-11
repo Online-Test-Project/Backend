@@ -83,12 +83,13 @@ namespace Web.Repository
         {
             try
             {
-                var query =
-                    from question
-                    in DbContext.Questions
-                    where question.Id == questionId
-                    select question;
-                DbContext.Questions.Remove(query.First());
+                //var query =
+                //    from question
+                //    in DbContext.Questions
+                //    where question.Id == questionId
+                //    select question;
+                var query = DbContext.Questions.Where(x => x.Id == questionId).FirstOrDefault();
+                DbContext.Questions.Remove(query);
                 DbContext.SaveChanges();
                 return true;
             }

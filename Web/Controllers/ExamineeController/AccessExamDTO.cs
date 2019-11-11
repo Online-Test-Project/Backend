@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Web.Controllers.ExamController
+namespace Web.Controllers.ExamineeController
 {
-    public class ExamDetailDTO
+    public class AccessExamDTO
     {
         public Guid Id;
-        public string Time;
-        public string Name;
         public string Password;
         public bool IsRandom;
     }

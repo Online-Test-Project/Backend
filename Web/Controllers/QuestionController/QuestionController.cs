@@ -20,13 +20,13 @@ namespace Web.Controllers.QuestionController
             this.answerRepository = answerRepository;
         }
 
-        [Route("{id}")]
+        [Route("{Id}")]
         [HttpGet]
-        public List<QuestionDTO> List(Guid bankId)
+        public List<QuestionDTO> List(Guid Id)
         {
             
 
-            List<Question> questions = questionRepository.ListByBankId(bankId);
+            List<Question> questions = questionRepository.ListByBankId(Id);
             List<QuestionDTO> result = new List<QuestionDTO>();
 
             foreach (Question question in questions)
@@ -103,9 +103,10 @@ namespace Web.Controllers.QuestionController
             return questionRepository.Create(newQuestion) && answerRepository.Create(newAnswers);
         }
 
-        public bool Delete(Guid questionId)
+        
+        public bool Delete([FromBody]Guid Id)
         {
-            return answerRepository.DeleteByQuestionId(questionId) && questionRepository.Delete(questionId);
+            return questionRepository.Delete(Id) && answerRepository.DeleteByQuestionId(Id);
         }
     }
 }

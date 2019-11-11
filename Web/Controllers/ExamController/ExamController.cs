@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Controllers.QuestionController;
 using Web.Models;
 using Web.Repository;
+using Web.Services.ExamService;
 
 namespace Web.Controllers.ExamController
 {
@@ -17,15 +18,17 @@ namespace Web.Controllers.ExamController
         private IQuestionRepository questionRepository;
         private IAnswerRepository answerRepository;
         private IExamRepository examRepository;
+        private IBankRepository bankRepository;
 
-        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository)
+        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository, IBankRepository bankRepository)
         {
             this.questionRepository = questionRepository;
             this.answerRepository = answerRepository;
             this.examRepository = examRepository;
+            this.bankRepository = bankRepository;
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet, Route("{Id}")]
         public List<QuestionDTO> Get(Guid Id) // Id of Exam
         {
             List<QuestionDTO> responseList = new List<QuestionDTO>();
@@ -58,6 +61,22 @@ namespace Web.Controllers.ExamController
             return responseList;
         }
 
+        [HttpGet, Route("{Id}")]
+        public RandomExamDetailDTO GetRandom(Guid Id) // ExamId
+        {
+            string bankName = bankRepository.ListByOwnerId(user.Id).Where(x => x.Id == Id).Select(x => x.Name).FirstOrDefault();
+            var exam = examRepository.GetRandomExam(Id);
+            return new RandomExamDetailDTO
+            {
+                BankId = exam.BankId,
+                BankName = bankName,
+                Name = exam.Name,
+                NumberOfEasyQuestion = exam.NumberOfEasyQuestion,
+                NumberOfHardQuestion = exam.NumberOfHardQuestion,
+                NumberOfNormalQuestion = exam.NumberOfNormalQuestion,
+                Time = exam.Time
+            };
+        }
         public List<ExamDetailDTO> List()
         {
             List<ExamDetailDTO> responseList = new List<ExamDetailDTO>();
@@ -66,7 +85,17 @@ namespace Web.Controllers.ExamController
                 Id = x.Id,
                 Time = x.Time,
                 Name = x.Name,
-                Password = x.Password
+                Password = x.Password,
+                IsRandom = false
+            }));
+
+            examRepository.ListRandomByUserId(user.Id).ForEach(x => responseList.Add(new ExamDetailDTO
+            {
+                Id = x.Id,
+                Time = x.Time,
+                Name = x.Name,
+                Password = x.Password,
+                IsRandom = true
             }));
 
             return responseList;
@@ -75,8 +104,11 @@ namespace Web.Controllers.ExamController
         public bool Create([FromBody] ExamDTO exam)
         {
             return examRepository.Create(exam, user.Id);
-            
+        }
+
+        public bool CreateRandom([FromBody] RandomExamDTO randomExam)
+        {
+            return examRepository.CreateRandom(randomExam, user.Id);
         }
     }
-
 }
