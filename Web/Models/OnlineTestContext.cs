@@ -167,9 +167,9 @@ namespace Web.Models
 
             modelBuilder.Entity<Score>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.ExamId });
-
                 entity.ToTable("Score");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.AnswerContent).IsRequired();
 
@@ -186,14 +186,12 @@ namespace Web.Models
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.Scores)
                     .HasForeignKey(d => d.ExamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Score_Exam");
 
-                entity.HasOne(d => d.ExamNavigation)
+                entity.HasOne(d => d.RandomExam)
                     .WithMany(p => p.Scores)
-                    .HasForeignKey(d => d.ExamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Score_RandomExam");
+                    .HasForeignKey(d => d.RandomExamId)
+                    .HasConstraintName("FK_Score_RandomExam1");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Scores)
