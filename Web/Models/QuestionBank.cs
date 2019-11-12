@@ -7,6 +7,7 @@ namespace Web.Models
     {
         public QuestionBank()
         {
+            Exams = new HashSet<Exam>();
             Questions = new HashSet<Question>();
             RandomExams = new HashSet<RandomExam>();
         }
@@ -18,6 +19,7 @@ namespace Web.Models
         public DateTime ModifiedDate { get; set; }
 
         public virtual User Owner { get; set; }
+        public virtual ICollection<Exam> Exams { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<RandomExam> RandomExams { get; set; }
     }

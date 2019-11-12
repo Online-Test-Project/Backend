@@ -18,9 +18,10 @@ namespace Web.Models
         public string Description { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-        public string Code { get; set; }
         public string Password { get; set; }
+        public Guid BankId { get; set; }
 
+        public virtual QuestionBank Bank { get; set; }
         public virtual User Owner { get; set; }
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
         public virtual ICollection<Score> Scores { get; set; }

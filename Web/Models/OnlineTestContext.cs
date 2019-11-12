@@ -46,8 +46,7 @@ namespace Web.Models
 
                 entity.Property(e => e.Content)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
@@ -62,8 +61,6 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Code).HasMaxLength(10);
-
                 entity.Property(e => e.EndTime).HasMaxLength(50);
 
                 entity.Property(e => e.Name)
@@ -72,7 +69,6 @@ namespace Web.Models
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasColumnName("password")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.StartTime).HasMaxLength(50);
@@ -80,6 +76,12 @@ namespace Web.Models
                 entity.Property(e => e.Time)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.HasOne(d => d.Bank)
+                    .WithMany(p => p.Exams)
+                    .HasForeignKey(d => d.BankId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Exam_QuestionBank");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Exams)
@@ -94,10 +96,6 @@ namespace Web.Models
                     .HasName("PK_ExamKit");
 
                 entity.ToTable("Exam_Question");
-
-                entity.Property(e => e.Code)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.ExamQuestions)
@@ -214,12 +212,11 @@ namespace Web.Models
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.Username)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<UserDetail>(entity =>
@@ -230,25 +227,17 @@ namespace Web.Models
 
                 entity.Property(e => e.UserId).ValueGeneratedNever();
 
-                entity.Property(e => e.Address)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity.Property(e => e.Address).HasMaxLength(200);
 
                 entity.Property(e => e.Dob)
                     .HasColumnName("DOB")
                     .HasColumnType("date");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Email).HasMaxLength(50);
 
-                entity.Property(e => e.FirstName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.FirstName).HasMaxLength(50);
 
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.LastName).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithOne(p => p.UserDetail)

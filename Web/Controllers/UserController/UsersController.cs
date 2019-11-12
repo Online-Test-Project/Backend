@@ -26,12 +26,12 @@ namespace Web.Controllers
         }
 
         [Route("Login"), HttpPost]
-        public string Login([FromBody] UserDTO user)
+        public AfterLoginDTO Login([FromBody] UserDTO user)
         {
             string token = _userService.Login(user);
             var CookieOptions = new CookieOptions { Expires = DateTime.Now.AddDays(30), Path = "/" };
             Response.Cookies.Append("JWT", token, CookieOptions);
-            return token;
+            return new AfterLoginDTO { Id = user.Id, Username = user.Username, Jwt = token };
         }
     }
 }

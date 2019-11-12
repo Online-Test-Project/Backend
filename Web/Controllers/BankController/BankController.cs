@@ -65,7 +65,7 @@ namespace Web.Controllers.BankController
         }
 
         [HttpPost]
-        public bool Delete(Guid bankId)
+        public bool Delete([FromBody]Guid bankId)
         {
             return repository.Delete(bankId);
         }
