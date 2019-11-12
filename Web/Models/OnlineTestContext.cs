@@ -51,7 +51,6 @@ namespace Web.Models
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Answer_Question");
             });
 
@@ -91,15 +90,13 @@ namespace Web.Models
 
             modelBuilder.Entity<ExamQuestion>(entity =>
             {
-                entity.HasKey(e => new { e.ExamId, e.QuestionId })
-                    .HasName("PK_ExamKit");
+                entity.HasKey(e => new { e.ExamId, e.QuestionId });
 
                 entity.ToTable("Exam_Question");
 
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.ExamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ExamKit_Exam");
 
                 entity.HasOne(d => d.Question)
@@ -174,19 +171,19 @@ namespace Web.Models
 
                 entity.ToTable("Score");
 
+                entity.Property(e => e.AnswerContent).IsRequired();
+
                 entity.Property(e => e.Score1).HasColumnName("Score");
+
+                entity.Property(e => e.StartTime)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Time)
                     .IsRequired()
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.Exam)
-                    .WithMany(p => p.Scores)
-                    .HasForeignKey(d => d.ExamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Score_Exam");
-
-                entity.HasOne(d => d.ExamNavigation)
                     .WithMany(p => p.Scores)
                     .HasForeignKey(d => d.ExamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
