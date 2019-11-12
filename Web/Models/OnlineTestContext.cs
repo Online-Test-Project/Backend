@@ -80,7 +80,6 @@ namespace Web.Models
                 entity.HasOne(d => d.Bank)
                     .WithMany(p => p.Exams)
                     .HasForeignKey(d => d.BankId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Exam_QuestionBank");
 
                 entity.HasOne(d => d.Owner)
@@ -119,7 +118,6 @@ namespace Web.Models
                 entity.HasOne(d => d.Bank)
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.BankId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Question_QuestionBank");
             });
 
@@ -161,7 +159,6 @@ namespace Web.Models
                 entity.HasOne(d => d.Bank)
                     .WithMany(p => p.RandomExams)
                     .HasForeignKey(d => d.BankId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RandomExam_Exam");
 
                 entity.HasOne(d => d.Owner)
