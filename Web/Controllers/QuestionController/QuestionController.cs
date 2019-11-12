@@ -108,7 +108,6 @@ namespace Web.Controllers.QuestionController
         {
             
             return questionRepository.Delete(deleteQuestionDTO);
-            
         }
     }
 }

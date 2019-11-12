@@ -10,6 +10,7 @@ namespace Web.Services.ExamService
     public interface IExamService :ITransientService
     {
         bool IsRandom(Guid examId);
+        bool Delete(Guid examId);
     }
     public class ExamService : IExamService
     {
@@ -18,6 +19,11 @@ namespace Web.Services.ExamService
         public ExamService(IExamRepository examRepository)
         {
             this.examRepository = examRepository;
+        }
+
+        public bool Delete(Guid examId)
+        {
+            return examRepository.Delete(examId, IsRandom(examId));
         }
 
         public bool IsRandom(Guid examId)
@@ -29,5 +35,7 @@ namespace Web.Services.ExamService
 
             return false;
         }
+
+
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Web.AppStart;
 using Web.Models;
 using Web.Repository;
+using Web.Services.BankService;
 
 namespace Web.Controllers.BankController
 {
@@ -14,10 +15,12 @@ namespace Web.Controllers.BankController
     // Every Controller inherit MyController to get user.
     public class BankController : MyController
     {
-        IBankRepository repository;
-        public BankController(IBankRepository repository)
+        private IBankRepository repository;
+        private IBankService bankService;
+        public BankController(IBankRepository repository, IBankService bankService)
         {
             this.repository = repository;
+            this.bankService = bankService;
         }
 
         [HttpGet]
@@ -67,7 +70,7 @@ namespace Web.Controllers.BankController
         [HttpPost]
         public bool Delete([FromBody]Guid bankId)
         {
-            return repository.Delete(bankId);
+            return bankService.Delete(bankId);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Web.Repository
         List<RandomExam> ListRandomByUserId(Guid userId);
         RandomExam GetRandomExam(Guid examId); //ExamId
         bool Delete(Guid Id, bool IsRandom);
+        List<Guid> ListExamIdByBankId(Guid bankId);
     }
     public class ExamRepository : IExamRepository
     {
@@ -124,6 +125,16 @@ namespace Web.Repository
                 return false;
             }
            
+        }
+
+        public List<Guid> ListExamIdByBankId(Guid bankId)
+        {
+            List<Guid> returnList = new List<Guid>();
+            var nonRandList = DbContext.Exams.Where(x => x.BankId == bankId);
+            var randList = DbContext.RandomExams.Where(x => x.BankId == bankId);
+            returnList.AddRange(nonRandList.Select(x => x.Id));
+            returnList.AddRange(randList.Select(x => x.Id));
+            return returnList;
         }
     }
 }
