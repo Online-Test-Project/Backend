@@ -16,7 +16,7 @@ namespace Web.Repository
 
         bool Create(Question newQuestion);
 
-        bool Delete(Guid questionId);
+        bool Delete(List<Guid> Ids);
 
         List<Question> ListByExamId(Guid examId);
     }
@@ -79,17 +79,18 @@ namespace Web.Repository
             }
         }
 
-        public bool Delete(Guid questionId)
+        public bool Delete(List<Guid> Ids)
         {
             try
             {
-                //var query =
-                //    from question
-                //    in DbContext.Questions
-                //    where question.Id == questionId
-                //    select question;
-                var query = DbContext.Questions.Where(x => x.Id == questionId).FirstOrDefault();
-                DbContext.Questions.Remove(query);
+                Ids.ForEach(x =>
+                {
+                    var singleEQ = DbContext.ExamQuestions.Where(y => y.QuestionId == x);
+                    DbContext.ExamQuestions.RemoveRange(singleEQ);
+                    
+                    var Q = DbContext.Questions.Where(y => y.Id == x).FirstOrDefault();
+                    DbContext.Questions.Remove(Q);
+                });
                 DbContext.SaveChanges();
                 return true;
             }

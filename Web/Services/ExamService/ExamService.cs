@@ -14,6 +14,12 @@ namespace Web.Services.ExamService
     public class ExamService : IExamService
     {
         private IExamRepository examRepository;
+
+        public ExamService(IExamRepository examRepository)
+        {
+            this.examRepository = examRepository;
+        }
+
         public bool IsRandom(Guid examId)
         {
             if (examRepository.GetRandomExam(examId) != null)

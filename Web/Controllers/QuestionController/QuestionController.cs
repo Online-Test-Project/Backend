@@ -24,7 +24,7 @@ namespace Web.Controllers.QuestionController
         [HttpGet]
         public List<QuestionDTO> List(Guid Id)
         {
-            
+
 
             List<Question> questions = questionRepository.ListByBankId(Id);
             List<QuestionDTO> result = new List<QuestionDTO>();
@@ -67,7 +67,7 @@ namespace Web.Controllers.QuestionController
                     Id = Guid.NewGuid(),
                     QuestionId = questionDTO.Id,
                     Content = answerDTO.Content,
-                    IsCorrect = answerDTO.IsCorrect                    
+                    IsCorrect = answerDTO.IsCorrect
                 });
             }
 
@@ -97,16 +97,18 @@ namespace Web.Controllers.QuestionController
                     Id = Guid.NewGuid(),
                     QuestionId = newQuestion.Id,
                     Content = answerDTO.Content,
-                    IsCorrect = answerDTO.IsCorrect                    
+                    IsCorrect = answerDTO.IsCorrect
                 });
             }
             return questionRepository.Create(newQuestion) && answerRepository.Create(newAnswers);
         }
 
-        
-        public bool Delete([FromBody]Guid Id)
+
+        public bool Delete([FromBody] List<Guid> deleteQuestionDTO)
         {
-            return questionRepository.Delete(Id) && answerRepository.DeleteByQuestionId(Id);
+            
+            return questionRepository.Delete(deleteQuestionDTO);
+            
         }
     }
 }

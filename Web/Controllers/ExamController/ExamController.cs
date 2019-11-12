@@ -19,13 +19,15 @@ namespace Web.Controllers.ExamController
         private IAnswerRepository answerRepository;
         private IExamRepository examRepository;
         private IBankRepository bankRepository;
+        private IExamService examService;
 
-        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository, IBankRepository bankRepository)
+        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository, IBankRepository bankRepository, IExamService examService)
         {
             this.questionRepository = questionRepository;
             this.answerRepository = answerRepository;
             this.examRepository = examRepository;
             this.bankRepository = bankRepository;
+            this.examService = examService;
         }
 
         [HttpGet, Route("{Id}")]
@@ -109,6 +111,11 @@ namespace Web.Controllers.ExamController
         public bool CreateRandom([FromBody] RandomExamDTO randomExam)
         {
             return examRepository.CreateRandom(randomExam, user.Id);
+        }
+
+        public bool Delete([FromBody] Guid examId)
+        {
+            return examRepository.Delete(examId, examService.IsRandom(examId));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Web.Repository
         bool CreateRandom(RandomExamDTO randomExamDTO, Guid userId);
         List<RandomExam> ListRandomByUserId(Guid userId);
         RandomExam GetRandomExam(Guid examId); //ExamId
+        bool Delete(Guid Id, bool IsRandom);
     }
     public class ExamRepository : IExamRepository
     {
@@ -92,6 +93,37 @@ namespace Web.Repository
         public RandomExam GetRandomExam(Guid examId)
         {
             return DbContext.RandomExams.Where(x => x.Id == examId).FirstOrDefault();
+        }
+
+        public bool Delete(Guid Id, bool IsRandom)
+        {
+            try
+            {
+                if (IsRandom)
+                {
+                    var deleteScore = DbContext.Scores.Where(x => x.RandomExamId == Id);
+                    DbContext.Scores.RemoveRange(deleteScore);
+
+                    var deleteRandomExam = DbContext.RandomExams.Where(x => x.Id == Id).FirstOrDefault();
+                    DbContext.RandomExams.Remove(deleteRandomExam);
+
+                }
+                else
+                {
+                    var deleteScore = DbContext.Scores.Where(x => x.ExamId == Id);
+                    DbContext.Scores.RemoveRange(deleteScore);
+
+                    var delete = DbContext.Exams.Where(x => x.Id == Id).FirstOrDefault();
+                    DbContext.Exams.Remove(delete);
+                }
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+           
         }
     }
 }
