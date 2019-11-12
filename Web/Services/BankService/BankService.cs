@@ -17,17 +17,20 @@ namespace Web.Services.BankService
         private IQuestionRepository questionRepository;
         private IExamRepository examRepository;
         private IExamService examService;
+        private IBankRepository bankRepository;
 
-        public BankService(IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService)
+        public BankService(IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService, IBankRepository bankRepository)
         {
             this.questionRepository = questionRepository;
             this.examRepository = examRepository;
             this.examService = examService;
+            this.bankRepository = bankRepository;
         }
 
         public bool Delete(Guid bankId)
         {
-            var listQuestionId = questionRepository.ListByBankId(bankId).Select(x => x.Id).ToList();
+            var listQuestion = questionRepository.ListByBankId(bankId);
+            var listQuestionId = listQuestion.Select(x => x.Id).ToList();
             bool deleteQuest = questionRepository.Delete(listQuestionId);
             bool flag = true;
             var listExamId = examRepository.ListExamIdByBankId(bankId);
@@ -38,6 +41,8 @@ namespace Web.Services.BankService
                     flag = false;
                 }
             });
+
+            flag = bankRepository.Delete(bankId) && flag;
 
             return flag && deleteQuest;
 
