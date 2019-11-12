@@ -187,6 +187,12 @@ namespace Web.Models
                     .WithMany(p => p.Scores)
                     .HasForeignKey(d => d.ExamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Score_Exam");
+
+                entity.HasOne(d => d.ExamNavigation)
+                    .WithMany(p => p.Scores)
+                    .HasForeignKey(d => d.ExamId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Score_RandomExam");
 
                 entity.HasOne(d => d.User)

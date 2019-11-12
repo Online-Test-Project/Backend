@@ -12,7 +12,8 @@ namespace Web.Models
         public string AnswerContent { get; set; }
         public string StartTime { get; set; }
 
-        public virtual RandomExam Exam { get; set; }
+        public virtual Exam Exam { get; set; }
+        public virtual RandomExam ExamNavigation { get; set; }
         public virtual User User { get; set; }
     }
 }

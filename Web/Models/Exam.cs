@@ -8,6 +8,7 @@ namespace Web.Models
         public Exam()
         {
             ExamQuestions = new HashSet<ExamQuestion>();
+            Scores = new HashSet<Score>();
         }
 
         public Guid Id { get; set; }
@@ -23,5 +24,6 @@ namespace Web.Models
         public virtual QuestionBank Bank { get; set; }
         public virtual User Owner { get; set; }
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
+        public virtual ICollection<Score> Scores { get; set; }
     }
 }
