@@ -10,5 +10,7 @@ namespace Web.Controllers.ExamController
         public Guid BankId;
         public List<int> Difficulty;
         public string Time;
+        public string Name;
+        public string Description;
     }
 }
