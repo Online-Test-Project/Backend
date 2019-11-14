@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Web.AppStart;
 using Web.Models;
 using Web.Repository;
 using Web.Services.BankService;
@@ -41,7 +38,7 @@ namespace Web.Controllers.BankController
         }
 
         [HttpPost]
-        public bool Create(BankDTO bank)
+        public bool Create([FromBody] BankDTO bank)
         {
             QuestionBank newBank = new QuestionBank {
                 Id = Guid.NewGuid(),
@@ -54,7 +51,7 @@ namespace Web.Controllers.BankController
         }
 
         [HttpPost]
-        public bool Update(BankDTO bank)
+        public bool Update([FromBody] BankDTO bank)
         {
             QuestionBank updatedBank = new QuestionBank
             {
@@ -68,7 +65,7 @@ namespace Web.Controllers.BankController
         }
 
         [HttpPost]
-        public bool Delete([FromBody]Guid bankId)
+        public bool Delete([FromBody] Guid bankId)
         {
             return bankService.Delete(bankId);
         }

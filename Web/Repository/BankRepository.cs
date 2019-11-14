@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Web.AppStart;
 using Web.Common;
-using Web.Controllers.BankController;
 using Web.Models;
 
 namespace Web.Repository
 {
     public interface IBankRepository : ITransientService
     {
-        int CountByOwnerId(Guid ownerId);
-
         bool Create(QuestionBank newBank);
 
         List<QuestionBank> ListByOwnerId(Guid ownerId);
@@ -31,15 +27,6 @@ namespace Web.Repository
             DbContext = _context;
         }
 
-        public int CountByOwnerId(Guid ownerId)
-        {
-            var query = from bank
-                        in DbContext.QuestionBanks
-                        where bank.OwnerId == ownerId
-                        select bank.Id;
-            return query.Count();
-        }
-
         public bool Create(QuestionBank newBank)
         {
             try
@@ -48,7 +35,7 @@ namespace Web.Repository
                 DbContext.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -72,7 +59,7 @@ namespace Web.Repository
                 DbContext.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -91,7 +78,7 @@ namespace Web.Repository
                 DbContext.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
