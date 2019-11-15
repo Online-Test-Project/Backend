@@ -9,6 +9,5 @@ namespace Web.Controllers.ExamineeController
     {
         public Guid Id;
         public string Password;
-        public bool IsRandom;
     }
 }
