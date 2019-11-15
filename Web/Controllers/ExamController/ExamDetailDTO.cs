@@ -11,6 +11,7 @@ namespace Web.Controllers.ExamController
         public string Time;
         public string Name;
         public string Password;
+        public string Description;
         public bool IsRandom;
     }
 }

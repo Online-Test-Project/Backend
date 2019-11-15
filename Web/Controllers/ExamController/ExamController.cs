@@ -87,6 +87,7 @@ namespace Web.Controllers.ExamController
                 Id = x.Id,
                 Time = x.Time,
                 Name = x.Name,
+                Description = x.Description,
                 Password = x.Password,
                 IsRandom = false
             }));
@@ -96,6 +97,7 @@ namespace Web.Controllers.ExamController
                 Id = x.Id,
                 Time = x.Time,
                 Name = x.Name,
+                Description = x.Description,
                 Password = x.Password,
                 IsRandom = true
             }));

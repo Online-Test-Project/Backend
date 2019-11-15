@@ -9,5 +9,7 @@ namespace Web.Controllers.ExamController
     {
         public List<Guid> QuestionId;
         public string Time;
+        public string Name;
+        public string Description;
     }
 }

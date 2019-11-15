@@ -143,7 +143,9 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Password)
                     .IsRequired()

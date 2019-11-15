@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Web.Models;
 using Web.Repository;
 
@@ -24,8 +22,6 @@ namespace Web.Controllers.QuestionController
         [HttpGet]
         public List<QuestionDTO> List(Guid Id)
         {
-
-
             List<Question> questions = questionRepository.ListByBankId(Id);
             List<QuestionDTO> result = new List<QuestionDTO>();
 
@@ -52,11 +48,11 @@ namespace Web.Controllers.QuestionController
                     Answers = answerDTOs
                 });
             }
-
             return result;
         }
 
-        public bool Update(QuestionDTO questionDTO)
+        [HttpPost]
+        public bool Update([FromBody] QuestionDTO questionDTO)
         {
 
             List<Answer> updatedAnswers = new List<Answer>();
@@ -78,7 +74,7 @@ namespace Web.Controllers.QuestionController
             return answerRepository.Update(updatedAnswers) && questionRepository.Update(updatedQuestion);
         }
 
-        public bool Create(QuestionDTO questionDTO)
+        public bool Create([FromBody] QuestionDTO questionDTO)
         {
 
             Question newQuestion = new Question {
@@ -106,7 +102,6 @@ namespace Web.Controllers.QuestionController
 
         public bool Delete([FromBody] List<Guid> deleteQuestionDTO)
         {
-            
             return questionRepository.Delete(deleteQuestionDTO);
         }
     }
