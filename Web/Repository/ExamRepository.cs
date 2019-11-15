@@ -13,6 +13,7 @@ namespace Web.Repository
     {
         Exam Get(Guid examId);
         List<Exam> ListByUserId(Guid userId);
+        int Count(Guid examId);
         bool Create(ExamDTO exam, Guid userId);
         bool CreateRandom(RandomExamDTO randomExamDTO, Guid userId);
         List<RandomExam> ListRandomByUserId(Guid userId);
@@ -32,25 +33,38 @@ namespace Web.Repository
 
         public bool Create(ExamDTO examDTO, Guid userId)
         {
-            Exam exam = new Exam
+            try
             {
-                Id = Guid.NewGuid(),
-                Password = RandomString(8),
-                OwnerId = userId,
-                Time = examDTO.Time,
-                Name = examDTO.Name,
-                Description = examDTO.Description
-            };
-            DbContext.Exams.Add(exam);
+                Exam exam = new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Password = RandomString(8),
+                    OwnerId = userId,
+                    Time = examDTO.Time,
+                    Name = examDTO.Name,
+                    BankId = examDTO.BankId,
+                    Description = examDTO.Description
+                };
+                DbContext.Exams.Add(exam);
 
-            examDTO.QuestionId.ForEach(x => DbContext.ExamQuestions.Add(new ExamQuestion
+                examDTO.QuestionId.ForEach(x => DbContext.ExamQuestions.Add(new ExamQuestion
+                {
+                    QuestionId = x,
+                    ExamId = exam.Id,
+                }));
+
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
             {
-                QuestionId = x,
-                ExamId = exam.Id,
-            }));
+                return false;
+            }
+        }
 
-            DbContext.SaveChanges();
-            return true;
+        public int Count(Guid examId)
+        {
+            return DbContext.ExamQuestions.Where(x => x.ExamId == examId).Count();
         }
 
         public Exam Get(Guid examId)

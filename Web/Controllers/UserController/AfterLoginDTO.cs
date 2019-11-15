@@ -7,8 +7,6 @@ namespace Web.AppStart
 {
     public class AfterLoginDTO
     {
-        public Guid Id { get; set; }
-
         public string Username { get; set; }
 
         public string Jwt { get; set; }
