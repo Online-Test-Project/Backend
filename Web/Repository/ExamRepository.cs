@@ -37,6 +37,7 @@ namespace Web.Repository
                 Id = Guid.NewGuid(),
                 Password = RandomString(8),
                 OwnerId = userId,
+                Time = examDTO.Time,
                 Name = examDTO.Name,
                 Description = examDTO.Description
             };
