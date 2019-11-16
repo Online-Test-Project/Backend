@@ -30,7 +30,7 @@ namespace Web.AppStart
 
         public void OnActionExecuting(ActionExecutingContext FilterContext)
         {
-            if (FilterContext.HttpContext.Request.Path.Value.ToLower().EndsWith("/login") )
+            if (FilterContext.HttpContext.Request.Path.Value.ToLower().EndsWith("/login") || FilterContext.HttpContext.Request.Path.Value.ToLower().EndsWith("/register"))
                 return;
             var Token = FilterContext.HttpContext.Request.Headers["JWT"];;   
             var JWTEntity = JWTHandler.Decode(Token);
