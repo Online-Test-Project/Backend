@@ -7,7 +7,7 @@ namespace Web.Controllers.ExamineeController
 {
     public class PasswordExamDTO
     {
-        public List<ExamineeQuestionDTO> ExamineeQuestions;
+        public List<ExamineeQuestionDTO> ExamineeQuestions = new List<ExamineeQuestionDTO>();
         public string TimeRemaining;
     }
 }

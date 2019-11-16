@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Web.Controllers.ReviewController
 {
     public class ReviewExamDetailDTO

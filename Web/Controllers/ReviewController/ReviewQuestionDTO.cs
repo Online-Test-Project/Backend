@@ -1,4 +1,6 @@
-﻿namespace Web.Controllers.ReviewController
+﻿using System.Collections.Generic;
+
+namespace Web.Controllers.ReviewController
 {
     public class ReviewQuestionDTO
     {
