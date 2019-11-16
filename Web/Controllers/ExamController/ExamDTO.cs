@@ -11,5 +11,6 @@ namespace Web.Controllers.ExamController
         public string Time;
         public string Name;
         public string Description;
+        public Guid BankId;
     }
 }

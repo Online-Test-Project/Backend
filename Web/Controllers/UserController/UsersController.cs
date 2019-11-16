@@ -31,7 +31,7 @@ namespace Web.Controllers
             string token = _userService.Login(user);
             var CookieOptions = new CookieOptions { Expires = DateTime.Now.AddDays(30), Path = "/" };
             Response.Cookies.Append("JWT", token, CookieOptions);
-            return new AfterLoginDTO { Id = user.Id, Username = user.Username, Jwt = token };
+            return new AfterLoginDTO { Username = user.Username, Jwt = token };
         }
     }
 }

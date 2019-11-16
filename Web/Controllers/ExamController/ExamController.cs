@@ -89,7 +89,10 @@ namespace Web.Controllers.ExamController
                 Name = x.Name,
                 Description = x.Description,
                 Password = x.Password,
-                IsRandom = false
+                IsRandom = false,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,
+                Count = examRepository.Count(x.Id)
             }));
 
             examRepository.ListRandomByUserId(user.Id).ForEach(x => responseList.Add(new ExamDetailDTO
@@ -99,7 +102,8 @@ namespace Web.Controllers.ExamController
                 Name = x.Name,
                 Description = x.Description,
                 Password = x.Password,
-                IsRandom = true
+                IsRandom = true,
+                Count = x.NumberOfEasyQuestion + x.NumberOfHardQuestion + x.NumberOfNormalQuestion
             }));
 
             return responseList;

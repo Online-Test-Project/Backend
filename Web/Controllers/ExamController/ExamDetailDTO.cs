@@ -13,5 +13,8 @@ namespace Web.Controllers.ExamController
         public string Password;
         public string Description;
         public bool IsRandom;
+        public string StartTime;
+        public string EndTime;
+        public int Count;
     }
 }
