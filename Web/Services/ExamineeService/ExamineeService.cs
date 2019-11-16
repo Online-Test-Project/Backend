@@ -43,9 +43,7 @@ namespace Web.Services.ExamineeService
         {
             PasswordExamDTO returnDTO = new PasswordExamDTO();
             returnDTO = examService.IsRandom(access.Id) ? GetRandomExam(access.Id) : GetFixedExam(access.Id);
-            returnDTO.TimeRemaining = TimeRemain(access.Id, userId);
             return returnDTO;
-
         }
 
         public bool VerifyPassword(AccessExamDTO access)

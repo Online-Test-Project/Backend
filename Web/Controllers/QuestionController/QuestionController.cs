@@ -74,6 +74,7 @@ namespace Web.Controllers.QuestionController
             return answerRepository.Update(updatedAnswers) && questionRepository.Update(updatedQuestion);
         }
 
+        [HttpPost]
         public bool Create([FromBody] QuestionDTO questionDTO)
         {
 
@@ -99,7 +100,7 @@ namespace Web.Controllers.QuestionController
             return questionRepository.Create(newQuestion) && answerRepository.Create(newAnswers);
         }
 
-
+        [HttpPost]
         public bool Delete([FromBody] List<Guid> deleteQuestionDTO)
         {
             return questionRepository.Delete(deleteQuestionDTO);

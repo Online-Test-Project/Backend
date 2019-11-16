@@ -32,14 +32,22 @@ namespace Web.Controllers.ExamineeController
             return examineeService.Get(Id);
         }
 
+        [HttpPost]
         public IActionResult Do([FromBody] AccessExamDTO accessExam)
         {
             if (!examineeService.VerifyPassword(accessExam))
             {
-                return Ok("Bad password");
+                return BadRequest("Bad password");
             }
 
-            return Ok(examineeService.Access(accessExam, user.Id));
+            string timeRemain = examineeService.TimeRemain(accessExam.Id, user.Id);
+            if (timeRemain.Equals(String.Empty))
+            {
+                return NoContent();
+            }
+            var response = examineeService.Access(accessExam, user.Id);
+            response.TimeRemaining = timeRemain;
+            return Ok(response);
         }
     }
 }

@@ -79,6 +79,8 @@ namespace Web.Controllers.ExamController
                 Time = exam.Time
             };
         }
+       
+        [HttpGet]
         public List<ExamDetailDTO> List()
         {
             List<ExamDetailDTO> responseList = new List<ExamDetailDTO>();
@@ -108,17 +110,20 @@ namespace Web.Controllers.ExamController
 
             return responseList;
         }
-
+        
+        [HttpPost]
         public bool Create([FromBody] ExamDTO exam)
         {
             return examRepository.Create(exam, user.Id);
         }
-
+        
+        [HttpPost]
         public bool CreateRandom([FromBody] RandomExamDTO randomExam)
         {
             return examRepository.CreateRandom(randomExam, user.Id);
         }
-
+        
+        [HttpPost]
         public bool Delete([FromBody] Guid examId)
         {
             return examRepository.Delete(examId, examService.IsRandom(examId));
