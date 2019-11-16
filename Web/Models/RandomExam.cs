@@ -20,6 +20,8 @@ namespace Web.Models
         public string Password { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
 
         public virtual QuestionBank Bank { get; set; }
         public virtual User Owner { get; set; }

@@ -143,6 +143,8 @@ namespace Web.Models
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.EndTime).HasMaxLength(50);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -150,6 +152,8 @@ namespace Web.Models
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.StartTime).HasMaxLength(50);
 
                 entity.Property(e => e.Time)
                     .IsRequired()

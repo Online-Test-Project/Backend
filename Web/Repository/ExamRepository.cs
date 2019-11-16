@@ -43,6 +43,8 @@ namespace Web.Repository
                     Time = examDTO.Time,
                     Name = examDTO.Name,
                     BankId = examDTO.BankId,
+                    StartTime = examDTO.StartTime,
+                    EndTime = examDTO.EndTime,
                     Description = examDTO.Description
                 };
                 DbContext.Exams.Add(exam);
@@ -87,6 +89,8 @@ namespace Web.Repository
                 NumberOfEasyQuestion = randomExamDTO.Difficulty[0],
                 NumberOfNormalQuestion = randomExamDTO.Difficulty[1],
                 NumberOfHardQuestion = randomExamDTO.Difficulty[2],
+                StartTime = randomExamDTO.StartTime,
+                EndTime = randomExamDTO.EndTime,
                 Time = randomExamDTO.Time,
                 Name = randomExamDTO.Name,
                 Description = randomExamDTO.Description

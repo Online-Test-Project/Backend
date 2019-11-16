@@ -35,9 +35,9 @@ namespace Web.Controllers.ExamController
         }
 
         [HttpGet, Route("{Id}")]
-        public List<QuestionDTO> Get(Guid Id) // Id of Exam
+        public ExamWithQuestionsDTO Get(Guid Id) // Id of Exam
         {
-            List<QuestionDTO> responseList = new List<QuestionDTO>();
+            List<QuestionDTO> questionList = new List<QuestionDTO>();
             List<Question> questions = questionRepository.ListByExamId(Id);
             foreach (var question in questions)
             {
@@ -54,7 +54,7 @@ namespace Web.Controllers.ExamController
                 }
 
                 // add question to List
-                responseList.Add(new QuestionDTO
+                questionList.Add(new QuestionDTO
                 {
                     Id = question.Id,
                     Difficulty = question.Difficulty,
@@ -63,8 +63,13 @@ namespace Web.Controllers.ExamController
                     Answers = answerDTOs
                 });
             }
-           
-            return responseList;
+            Exam exam = examRepository.Get(Id);
+            return new ExamWithQuestionsDTO
+            {
+                Name = exam.Name,
+                Time = exam.Time,
+                Questions = questionList
+            };
         }
 
         [HttpGet, Route("{Id}")]
@@ -109,6 +114,8 @@ namespace Web.Controllers.ExamController
                 Description = x.Description,
                 Password = x.Password,
                 IsRandom = true,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,
                 Count = x.NumberOfEasyQuestion + x.NumberOfHardQuestion + x.NumberOfNormalQuestion
             }));
 
