@@ -84,19 +84,41 @@ namespace Web.Services.ExamineeService
             {
                 if (isRandom)
                 {
+                    scoreRepository.Create(new Score
+                    {
+                        Id = Guid.NewGuid(),
+                        RandomExamId = examId,
+                        AnswerContent = String.Empty,
+                        Score1 = 0,
+                        StartTime = DateTime.Now.ToString(),
+                        UserId = userId,
+                        Time = String.Empty
+                    }) ;
+                    
                     return examRepository.GetRandomExam(examId).Time;
                 }
                 else
                 {
+                    scoreRepository.Create(new Score
+                    {
+                        Id = Guid.NewGuid(),
+                        ExamId = examId,
+                        AnswerContent = String.Empty,
+                        Score1 = 0,
+                        StartTime = DateTime.Now.ToString(),
+                        UserId = userId,
+                        Time = String.Empty
+                    });
                     return examRepository.Get(examId).Time;
                 }
             }
             else
             {
+                Score recordedScore = scoreRepository.Get(examId, userId);
                 var timeSpent = DateTime.Now - DateTime.Parse(startTime);
                 string examTimeInString = isRandom ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
                 TimeSpan examTime = TimeSpan.Parse(examTimeInString);
-                return (timeSpent < examTime) ? (examTime - timeSpent).ToString() : String.Empty;
+                return (timeSpent < examTime && recordedScore.Time.Equals(String.Empty)) ? (examTime - timeSpent).ToString() : String.Empty;
             }
         }
 

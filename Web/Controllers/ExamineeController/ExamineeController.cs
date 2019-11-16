@@ -45,6 +45,7 @@ namespace Web.Controllers.ExamineeController
             {
                 return NoContent();
             }
+
             var response = examineeService.Access(accessExam, user.Id);
             response.TimeRemaining = timeRemain;
             return Ok(response);
