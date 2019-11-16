@@ -29,8 +29,15 @@ namespace Web.Controllers
         public AfterLoginDTO Login([FromBody] UserDTO user)
         {
             string token = _userService.Login(user);
-            var CookieOptions = new CookieOptions { Expires = DateTime.Now.AddDays(30), Path = "/" };
-            Response.Cookies.Append("JWT", token, CookieOptions);
+            //var CookieOptions = new CookieOptions { Expires = DateTime.Now.AddDays(30), Path = "/" };
+            //Response.Cookies.Append("JWT", token, CookieOptions);
+            return new AfterLoginDTO { Username = user.Username, Jwt = token };
+        }
+
+        [Route("Register"), HttpPost]
+        public AfterLoginDTO Register([FromBody] UserDTO user)
+        {
+            string token = _userService.Register(user);
             return new AfterLoginDTO { Username = user.Username, Jwt = token };
         }
     }
