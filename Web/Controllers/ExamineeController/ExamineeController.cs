@@ -59,7 +59,10 @@ namespace Web.Controllers.ExamineeController
             return Ok(response);
         }
 
-        //[HttpPost]
-        //public MarkDTO Submit([FromBody] )
+        [HttpPost]
+        public MarkDTO Submit([FromBody] ExamAnswerDTO examAnswer)
+        {
+
+        }
     }
 }

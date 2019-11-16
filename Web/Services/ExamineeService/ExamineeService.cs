@@ -19,6 +19,7 @@ namespace Web.Services.ExamineeService
         string TimeRemain(Guid examId, Guid userId);
         PasswordExamDTO GetFixedExam(Guid examId);
         PasswordExamDTO GetRandomExam(Guid examId);
+        MarkDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId);
         
     }
     public class ExamineeService : IExamineeService
@@ -159,5 +160,19 @@ namespace Web.Services.ExamineeService
             examDTO.TimeRemaining = String.Empty;
             return examDTO;
         }
+
+        public MarkDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId)
+        {
+            MarkDTO mark = new MarkDTO();
+            mark.TimeSpent = CalculateTimeSpent(examAnswer.ExamId, userId);
+        }
+
+        private string CalculateTimeSpent(Guid examId, Guid userId)
+        {
+            string startTime = scoreRepository.GetTimeStamp(examId, userId);
+            var examTime = examService.IsRandom(examId) ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
+            var timeSpent = TimeSpan.Parse(examTime) < (DateTime.Now - DateTime.Parse(startTime)
+        }
     }
+
 }

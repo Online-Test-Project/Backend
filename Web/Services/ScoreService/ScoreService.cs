@@ -20,9 +20,5 @@ namespace Web.Services.ScoreService
             this.bankService = bankService;
         }
 
-        //public bool Update(Guid examId, Guid userId)
-        //{
-            
-        //}
     }
 }
