@@ -6,6 +6,7 @@ using Web.Common;
 using Web.Controllers.ExamineeController;
 using Web.Models;
 using Web.Repository;
+using Web.Services.BankService;
 using Web.Services.ExamService;
 
 namespace Web.Services.ExamineeService
@@ -16,6 +17,8 @@ namespace Web.Services.ExamineeService
         PasswordExamDTO Access(AccessExamDTO access, Guid userId);
         bool VerifyPassword(AccessExamDTO access);
         string TimeRemain(Guid examId, Guid userId);
+        PasswordExamDTO GetFixedExam(Guid examId);
+        PasswordExamDTO GetRandomExam(Guid examId);
         
     }
     public class ExamineeService : IExamineeService
@@ -25,54 +28,29 @@ namespace Web.Services.ExamineeService
         private IExamRepository examRepository;
         private IExamService examService;
         private IScoreRepository scoreRepository;
-        public ExamineeService(IAnswerRepository answerRepository, IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService, IScoreRepository socreRepository)
+        private IBankService bankService;
+        public ExamineeService(IAnswerRepository answerRepository, IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService, IScoreRepository socreRepository, IBankService bankService)
         {
             this.answerRepository = answerRepository;
             this.questionRepository = questionRepository;
             this.examRepository = examRepository;
             this.examService = examService;
             this.scoreRepository = socreRepository;
+            this.bankService = bankService;
         }
 
         public PasswordExamDTO Access(AccessExamDTO access, Guid userId)
         {
             PasswordExamDTO returnDTO = new PasswordExamDTO();
-            if (examService.IsRandom(access.Id))
-            {
-                // TODO: Gen Randrom exam
-                throw new NotImplementedException();
-                return returnDTO;
-            }
-            else
-            {
-                questionRepository.ListByExamId(access.Id).ForEach(x =>
-                {
-                    List<ExamineeAnswerDTO> examineeAnswers = new List<ExamineeAnswerDTO>();
-                    answerRepository.ListByQuestionId(x.Id).ForEach(y => examineeAnswers.Add(new ExamineeAnswerDTO
-                    {
-                        Content = y.Content,
-                        Id = y.Id
-                    }));
-
-                    returnDTO.ExamineeQuestions.Add(new ExamineeQuestionDTO
-                    {
-                        Id = x.Id,
-                        Content = x.Content,
-                        Answers = examineeAnswers,
-                        Type = x.Type
-                    });
-
-                    returnDTO.TimeRemaining = TimeRemain(access.Id, userId);
-                });
-
-                return returnDTO;
-            }
+            returnDTO = examService.IsRandom(access.Id) ? GetRandomExam(access.Id) : GetFixedExam(access.Id);
+            returnDTO.TimeRemaining = TimeRemain(access.Id, userId);
+            return returnDTO;
 
         }
 
         public bool VerifyPassword(AccessExamDTO access)
         {
-            if (access.IsRandom)
+            if (examService.IsRandom(access.Id))
             {
                 return examRepository.GetRandomExam(access.Id).Password == access.Password;
             }
@@ -103,13 +81,63 @@ namespace Web.Services.ExamineeService
         public string TimeRemain(Guid examId, Guid userId)
         {
             string startTime = scoreRepository.GetTimeStamp(examId, userId);
+            bool isRandom = examService.IsRandom(examId);
             if (startTime.Equals(String.Empty))
             {
-                if (examService.IsRandom(examId))
+                if (isRandom)
                 {
                     return examRepository.GetRandomExam(examId).Time;
                 }
+                else
+                {
+                    return examRepository.Get(examId).Time;
+                }
             }
+            else
+            {
+                var timeSpent = DateTime.Now - DateTime.Parse(startTime);
+                string examTimeInString = isRandom ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
+                TimeSpan examTime = TimeSpan.Parse(examTimeInString);
+                return (timeSpent < examTime) ? (examTime - timeSpent).ToString() : String.Empty;
+            }
+        }
+
+        public PasswordExamDTO GetFixedExam(Guid examId)
+        {
+            PasswordExamDTO fixedExam = new PasswordExamDTO();
+            questionRepository.ListByExamId(examId).ForEach(x =>
+            {
+                List<ExamineeAnswerDTO> examineeAnswers = new List<ExamineeAnswerDTO>();
+                answerRepository.ListByQuestionId(x.Id).ForEach(y => examineeAnswers.Add(new ExamineeAnswerDTO
+                {
+                    Content = y.Content,
+                    Id = y.Id
+                }));
+
+                fixedExam.ExamineeQuestions.Add(new ExamineeQuestionDTO
+                {
+                    Id = x.Id,
+                    Content = x.Content,
+                    Answers = examineeAnswers,
+                    Type = x.Type
+                });
+            });
+
+            fixedExam.TimeRemaining = String.Empty;
+            return fixedExam;
+        }
+
+        public PasswordExamDTO GetRandomExam(Guid examId)
+        {
+            var exam = examRepository.GetRandomExam(examId);
+            Guid bankId = exam.BankId;
+            PasswordExamDTO examDTO = new PasswordExamDTO();
+            examDTO.ExamineeQuestions.AddRange(bankService.ListRandomQuestion(bankId, exam.NumberOfEasyQuestion, 1));
+            examDTO.ExamineeQuestions.AddRange(bankService.ListRandomQuestion(bankId, exam.NumberOfNormalQuestion, 2));
+            examDTO.ExamineeQuestions.AddRange(bankService.ListRandomQuestion(bankId, exam.NumberOfHardQuestion, 3));
+
+            examDTO.TimeRemaining = String.Empty;
+            return examDTO;
         }
     }
 }

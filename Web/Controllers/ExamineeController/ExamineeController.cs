@@ -39,7 +39,7 @@ namespace Web.Controllers.ExamineeController
                 return Ok("Bad password");
             }
 
-            return Ok(examineeService.Access(accessExam));
+            return Ok(examineeService.Access(accessExam, user.Id));
         }
     }
 }

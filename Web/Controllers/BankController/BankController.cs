@@ -9,6 +9,7 @@ namespace Web.Controllers.BankController
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    
     // Every Controller inherit MyController to get user.
     public class BankController : MyController
     {

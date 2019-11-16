@@ -16,7 +16,7 @@ namespace Web.Repository
         bool Create(ExamDTO exam, Guid userId);
         bool CreateRandom(RandomExamDTO randomExamDTO, Guid userId);
         List<RandomExam> ListRandomByUserId(Guid userId);
-        RandomExam GetRandomExam(Guid examId); //ExamId
+        RandomExam GetRandomExam(Guid examId); 
         bool Delete(Guid Id, bool IsRandom);
         List<Guid> ListExamIdByBankId(Guid bankId);
     }
