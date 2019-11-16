@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Controllers.ExamineeController;
 using Web.Controllers.QuestionController;
 using Web.Models;
 using Web.Repository;
+using Web.Services.ExamineeService;
 using Web.Services.ExamService;
 
 namespace Web.Controllers.ExamController
@@ -20,14 +22,16 @@ namespace Web.Controllers.ExamController
         private IExamRepository examRepository;
         private IBankRepository bankRepository;
         private IExamService examService;
+        private IExamineeService examineeService;
 
-        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository, IBankRepository bankRepository, IExamService examService)
+        public ExamController(IQuestionRepository questionRepository, IAnswerRepository answerRepository, IExamRepository examRepository, IBankRepository bankRepository, IExamService examService, IExamineeService examineeService)
         {
             this.questionRepository = questionRepository;
             this.answerRepository = answerRepository;
             this.examRepository = examRepository;
             this.bankRepository = bankRepository;
             this.examService = examService;
+            this.examineeService = examineeService;
         }
 
         [HttpGet, Route("{Id}")]
@@ -127,6 +131,14 @@ namespace Web.Controllers.ExamController
         public bool Delete([FromBody] Guid examId)
         {
             return examRepository.Delete(examId, examService.IsRandom(examId));
+        }
+
+        [HttpPost]
+        public PasswordExamDTO Generate([FromBody] Guid examId)
+        {
+            var response = examineeService.GetRandomExam(examId);
+            response.TimeRemaining = String.Empty;
+            return response;
         }
     }
 }
