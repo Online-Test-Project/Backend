@@ -33,5 +33,32 @@ namespace Web.Controllers.ReviewController
 
             return reviewExams;
         }
+
+        [HttpGet, Route("{Id}")]
+        public ReviewExamDetailDTO Get(Guid Id)
+        {
+            var quests = new List<ReviewQuestionDTO>;
+            quests.Add(new ReviewQuestionDTO
+            {
+                Content = "fist quest",
+                IsCorrect = true,
+                ReviewAnswers = new List<ReviewAnswerDTO>
+                {
+                    new ReviewAnswerDTO
+                    {
+                        Content = "fist answwer",
+                        IsSelected = true
+                    },
+                    new ReviewAnswerDTO
+                    {
+                        Content = "B answer",
+                    }
+                }
+            })
+            return new ReviewExamDetailDTO
+            {
+                
+            }
+        }
     }
 }
