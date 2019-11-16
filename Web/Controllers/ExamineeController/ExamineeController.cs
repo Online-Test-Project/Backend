@@ -47,8 +47,19 @@ namespace Web.Controllers.ExamineeController
             }
 
             var response = examineeService.Access(accessExam, user.Id);
+            response.ExamineeQuestions.ForEach(x =>
+            {
+                if (x.Type == 3)
+                {
+                    x.Answers.ForEach(answer => answer.Content = String.Empty);
+                }
+            });
+
             response.TimeRemaining = timeRemain;
             return Ok(response);
         }
+
+        //[HttpPost]
+        //public MarkDTO Submit([FromBody] )
     }
 }
