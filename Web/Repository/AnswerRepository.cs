@@ -38,7 +38,7 @@ namespace Web.Repository
                 DbContext.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

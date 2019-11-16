@@ -8,9 +8,15 @@ namespace Web.Repository
 {
     public interface IBankRepository : ITransientService
     {
+        QuestionBank Get(Guid bankId);
+
         bool Create(QuestionBank newBank);
 
         List<QuestionBank> ListByOwnerId(Guid ownerId);
+
+        List<int> CountByType(Guid bankId);
+
+        List<int> CountByDifficulty(Guid bankId);
 
         bool Update(QuestionBank updatedBank);
 
@@ -82,6 +88,31 @@ namespace Web.Repository
             {
                 return false;
             }
+        }
+
+        public List<int> CountByType(Guid bankId)
+        {
+            List<int> result = new List<int>();
+            for (int i = 1; i <= 3; i++)
+            {
+                result.Add(DbContext.Questions.Where(x => x.BankId == bankId && x.Type == i).Count());
+            }
+            return result;
+        }
+
+        public List<int> CountByDifficulty(Guid bankId)
+        {
+            List<int> result = new List<int>();
+            for (int i = 1; i <= 3; i++)
+            {
+                result.Add(DbContext.Questions.Where(x => x.BankId == bankId && x.Difficulty == i).Count());
+            }
+            return result;
+        }
+
+        public QuestionBank Get(Guid bankId)
+        {
+            return DbContext.QuestionBanks.Where(x => x.Id == bankId).FirstOrDefault();
         }
     }
 }

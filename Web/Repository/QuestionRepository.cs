@@ -73,7 +73,7 @@ namespace Web.Repository
                 DbContext.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }

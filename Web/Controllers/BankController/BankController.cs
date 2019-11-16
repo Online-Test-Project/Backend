@@ -21,6 +21,20 @@ namespace Web.Controllers.BankController
             this.bankService = bankService;
         }
 
+        [HttpGet, Route("{Id}")]
+        public BankInfoDTO Get(Guid Id)
+        {
+            QuestionBank bank = repository.Get(Id);
+            return new BankInfoDTO
+            {
+                Name = bank.Name,
+                Description = bank.Description,
+                ModifiedDate = bank.ModifiedDate.ToString(),
+                Type = repository.CountByType(Id),
+                Difficulty = repository.CountByDifficulty(Id)
+            };
+        }
+
         [HttpGet]
         public List<BankDTO> List()
         {
