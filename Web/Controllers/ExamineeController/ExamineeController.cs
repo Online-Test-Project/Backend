@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Controllers.ReviewController;
 using Web.Repository;
 using Web.Services.ExamineeService;
 //using Web.Services.ExamineeService;
 using Web.Services.ExamService;
+using Web.Services.ScoreService;
 
 namespace Web.Controllers.ExamineeController
 {
@@ -18,12 +20,14 @@ namespace Web.Controllers.ExamineeController
         private IExamRepository examRepository;
         private IExamService examService;
         private IExamineeService examineeService;
+        private IScoreService scoreService;
         //private IExamineeService examineeService;
 
-        public ExamineeController(IExamRepository examRepository, IExamineeService examineeService)
+        public ExamineeController(IExamRepository examRepository, IExamineeService examineeService, IScoreService scoreService)
         {
             this.examRepository = examRepository;
             this.examineeService = examineeService;
+            this.scoreService = scoreService;
         }
 
         [HttpGet, Route("{Id}")]
@@ -60,9 +64,9 @@ namespace Web.Controllers.ExamineeController
         }
 
         [HttpPost]
-        public MarkDTO Submit([FromBody] ExamAnswerDTO examAnswer)
+        public ReviewExamDTO Submit([FromBody] ExamAnswerDTO examAnswer)
         {
-
+            return scoreService.Update(examAnswer, user.Id);
         }
     }
 }

@@ -5,8 +5,8 @@ namespace Web.Controllers.ExamineeController
 {
     public class ExamAnswerDetailDTO
     {
-        Guid QuestionId;
-        List<UserAnswerDTO> UserAnswers;
-        string Content;
+        public Guid QuestionId;
+        public List<UserAnswerDTO> UserAnswers;
+        public string Content;
     }
 }

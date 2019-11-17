@@ -11,8 +11,9 @@ namespace Web.Repository
     {
         string GetTimeStamp(Guid examId, Guid userId);
         bool Create(Score score);
-        Score Get(Guid examId, Guid userId);
-        //bool Update(Score score, bool IsRandom);
+        Score Get(Guid examId, Guid userId, bool IsRandom);
+        bool Update(Score score);
+        List<Score> List(Guid userId);
     }
     public class ScoreRepository : IScoreRepository
     {
@@ -38,9 +39,16 @@ namespace Web.Repository
             }
         }
 
-        public Score Get(Guid examId, Guid userId)
+        public Score Get(Guid examId, Guid userId, bool IsRandom)
         {
-            return DbContext.Scores.Where(x => x.ExamId == examId && x.UserId == userId).FirstOrDefault();
+            if (IsRandom)
+            {
+                return DbContext.Scores.Where(x => x.RandomExamId == examId && x.UserId == userId).FirstOrDefault();
+            }
+            else
+            {
+                return DbContext.Scores.Where(x => x.ExamId == examId && x.UserId == userId).FirstOrDefault();
+            }
         }
 
         public string GetTimeStamp(Guid examId, Guid userId)
@@ -56,21 +64,24 @@ namespace Web.Repository
             }
         }
 
-        //public bool Update(Score score, bool IsRandom)
-        //{
-        //    if (IsRandom)
-        //    {
-        //        var oldScore = DbContext.Scores.FirstOrDefault(x => x.RandomExamId == score.ExamId && x.UserId == score.UserId);
-        //        oldScore.Score1 = score.Score1;
-        //        oldScore.Time = DateTime.Now - 
-        //    }
-        //    else
-        //    {
-        //        var oldScore = DbContext.Scores.FirstOrDefault(x => x.ExamId == score.ExamId && x.UserId == score.UserId);
+        public List<Score> List(Guid userId)
+        {
+            return DbContext.Scores.Where(x => x.UserId == userId).ToList();
+        }
 
-        //    }
-
-
-        //}
+        public bool Update(Score score)
+        {
+            try
+            {
+                DbContext.Scores.Update(score);
+                DbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
     }
 }

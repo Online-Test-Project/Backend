@@ -179,6 +179,8 @@ namespace Web.Models
 
                 entity.Property(e => e.AnswerContent).IsRequired();
 
+                entity.Property(e => e.ExamName).HasMaxLength(50);
+
                 entity.Property(e => e.Score1).HasColumnName("Score");
 
                 entity.Property(e => e.StartTime)

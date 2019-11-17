@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Common;
 using Web.Controllers.ExamineeController;
+using Web.Controllers.ReviewController;
 using Web.Models;
 using Web.Repository;
 using Web.Services.BankService;
@@ -19,8 +20,8 @@ namespace Web.Services.ExamineeService
         string TimeRemain(Guid examId, Guid userId);
         PasswordExamDTO GetFixedExam(Guid examId);
         PasswordExamDTO GetRandomExam(Guid examId);
-        MarkDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId);
-        
+        ReviewExamDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId);
+        bool GetQuestionState(Guid questionId);
     }
     public class ExamineeService : IExamineeService
     {
@@ -30,6 +31,7 @@ namespace Web.Services.ExamineeService
         private IExamService examService;
         private IScoreRepository scoreRepository;
         private IBankService bankService;
+        private static IDictionary<Guid, bool> QuestionState = new Dictionary<Guid, bool>();
         public ExamineeService(IAnswerRepository answerRepository, IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService, IScoreRepository socreRepository, IBankService bankService)
         {
             this.answerRepository = answerRepository;
@@ -88,6 +90,7 @@ namespace Web.Services.ExamineeService
                     scoreRepository.Create(new Score
                     {
                         Id = Guid.NewGuid(),
+                        ExamName = examRepository.GetRandomExam(examId).Name,
                         RandomExamId = examId,
                         AnswerContent = String.Empty,
                         Score1 = 0,
@@ -103,6 +106,7 @@ namespace Web.Services.ExamineeService
                     scoreRepository.Create(new Score
                     {
                         Id = Guid.NewGuid(),
+                        ExamName = examRepository.Get(examId).Name,
                         ExamId = examId,
                         AnswerContent = String.Empty,
                         Score1 = 0,
@@ -115,7 +119,7 @@ namespace Web.Services.ExamineeService
             }
             else
             {
-                Score recordedScore = scoreRepository.Get(examId, userId);
+                Score recordedScore = scoreRepository.Get(examId, userId, isRandom);
                 var timeSpent = DateTime.Now - DateTime.Parse(startTime);
                 string examTimeInString = isRandom ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
                 TimeSpan examTime = TimeSpan.Parse(examTimeInString);
@@ -161,17 +165,56 @@ namespace Web.Services.ExamineeService
             return examDTO;
         }
 
-        public MarkDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId)
+        public ReviewExamDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId)
         {
-            MarkDTO mark = new MarkDTO();
+            ReviewExamDTO mark = new ReviewExamDTO();
             mark.TimeSpent = CalculateTimeSpent(examAnswer.ExamId, userId);
+            int numsOfTrue = 0;
+            var examQuestion = questionRepository.ListByExamId(examAnswer.ExamId);
+            examAnswer.AnswerDetails.ForEach(answer =>
+            {
+                var key = examQuestion.Where(x => x.Id == answer.QuestionId).FirstOrDefault();
+                if (key.Type == 3)
+                {
+                    if (answer.Content.Equals(key.Content))
+                    {
+                        QuestionState.Add(key.Id, true);
+                        numsOfTrue++;
+                    }
+                }
+                else
+                {
+                    var userAnswers = answer.UserAnswers.Select(x => x.AnswerId).OrderBy(x => x).ToList();
+                    var trueAnswers = answerRepository.ListByQuestionId(key.Id).Select(x => x.Id).OrderBy(x => x).ToList();
+                    if (string.Join("", userAnswers).Equals(string.Join("", trueAnswers)))
+                    {
+                        QuestionState.Add(key.Id, true);
+                        numsOfTrue++;
+                    }
+                }
+                QuestionState.Add(key.Id, false);
+            });
+
+            mark.TotalQuest = examQuestion.Count;
+            mark.NumsOfTrue = numsOfTrue;
+            mark.Score = (Double)mark.NumsOfTrue / mark.TotalQuest * 10;
+
+            return mark;
         }
 
         private string CalculateTimeSpent(Guid examId, Guid userId)
         {
             string startTime = scoreRepository.GetTimeStamp(examId, userId);
             var examTime = examService.IsRandom(examId) ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
-            var timeSpent = TimeSpan.Parse(examTime) < (DateTime.Now - DateTime.Parse(startTime)
+            var timeSpent = TimeSpan.Parse(examTime) < (DateTime.Now - DateTime.Parse(startTime)) ? TimeSpan.Parse(examTime) : (DateTime.Now - DateTime.Parse(startTime));
+            return timeSpent.ToString();
+        }
+
+        public bool GetQuestionState(Guid questionId)
+        {
+            bool result;
+            return QuestionState.TryGetValue(questionId, out result) ? result : false;
+             
         }
     }
 

@@ -16,6 +16,8 @@ namespace Web.Repository
         bool DeleteByQuestionId(Guid questionId);
 
         bool Update(List<Answer> updatedAnswers);
+
+        Answer Get(Guid answerId);
     }
 
     public class AnswerRepository : IAnswerRepository
@@ -104,6 +106,11 @@ namespace Web.Repository
             {
                 return false;
             }
+        }
+
+        public Answer Get(Guid answerId)
+        {
+            return DbContext.Answers.Where(x => x.Id == answerId).FirstOrDefault();
         }
     }
 }
