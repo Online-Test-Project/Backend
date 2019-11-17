@@ -4,9 +4,10 @@ namespace Web.Controllers.ReviewController
 {
     public class ReviewExamDTO
     {
-         public Guid Id;
-         public String Time;
-         public Double Score;
-         public String Date;
+        public string Name;
+        public Guid Id;
+        public string Time;
+        public double Score;
+        public string Date;
     }    
 }
