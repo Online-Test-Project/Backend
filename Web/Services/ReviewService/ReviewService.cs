@@ -41,15 +41,18 @@ namespace Web.Services.ReviewService
             List<ReviewExamDTO> myList = new List<ReviewExamDTO>();
             scoreList.ForEach(x =>
             {
-                var examId = (x.ExamId != null) ? x.ExamId : x.RandomExamId;
-                myList.Add(new ReviewExamDTO
+                if (!x.AnswerContent.Equals(String.Empty))
                 {
-                    Date = DateTime.Parse(x.StartTime).ToString("dd-MM-yyyy"),
-                    ExamId = (Guid)examId,
-                    Name = x.ExamName,
-                    Score = x.Score1,
-                    TimeSpent = x.Time,
-                });
+                    var examId = (x.ExamId != null) ? x.ExamId : x.RandomExamId;
+                    myList.Add(new ReviewExamDTO
+                    {
+                        Date = DateTime.Parse(x.StartTime).ToString("dd-MM-yyyy"),
+                        ExamId = (Guid)examId,
+                        Name = x.ExamName,
+                        Score = x.Score1,
+                        TimeSpent = x.Time,
+                    });
+                }
             });
             return myList;
         }
