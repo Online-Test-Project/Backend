@@ -5,6 +5,7 @@ namespace Web.Controllers.ReviewController
     public class ReviewExamDTO
     {
         public Guid ExamId;
+        public String Name;
         public String TimeSpent;
         public Double Score;
         public String Date;

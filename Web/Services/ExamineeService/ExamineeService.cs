@@ -67,7 +67,9 @@ namespace Web.Services.ExamineeService
                 {
                     IsRandom = true,
                     Name = randomExam.Name,
-                    Time = randomExam.Time
+                    Time = randomExam.Time,
+                    StartTime = randomExam.StartTime,
+                    EndTime = randomExam.EndTime
                 };
             }
             var examDetail = examRepository.Get(Id);
@@ -75,7 +77,9 @@ namespace Web.Services.ExamineeService
             {
                 IsRandom = false,
                 Name = examDetail.Name,
-                Time = examDetail.Time
+                Time = examDetail.Time,
+                StartTime = examDetail.StartTime,
+                EndTime = examDetail.EndTime
             };
         }
 

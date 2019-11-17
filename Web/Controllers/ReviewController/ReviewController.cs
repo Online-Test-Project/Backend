@@ -18,19 +18,19 @@ namespace Web.Controllers.ReviewController
             reviewExams.Add(new ReviewExamDTO
             {
                 Name = "Đề quá dễ",
-                Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                ExamId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                 Date = DateTime.Now.ToString(),
                 Score = 8.5,
-                Time = "15:27"
+                TimeSpent = "15:27"
             });
 
             reviewExams.Add(new ReviewExamDTO
             {
                 Name = "Đề không quá khó",
-                Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"),
+                ExamId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"),
                 Date = DateTime.Now.ToString(),
                 Score = 8.5,
-                Time = "15:27"
+                TimeSpent = "15:27"
             });
 
             return reviewExams;

@@ -10,5 +10,7 @@ namespace Web.Controllers.ExamineeController
         public string Name;
         public string Time; // this is time remaining
         public bool IsRandom;
+        public string StartTime;
+        public string EndTime;
     }
 }
