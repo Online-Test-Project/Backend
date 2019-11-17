@@ -199,9 +199,7 @@ namespace Web.Services.ExamineeService
                 QuestionState.Add(key.Id, false);
             });
 
-            mark.TotalQuest = examQuestion.Count;
-            mark.NumsOfTrue = numsOfTrue;
-            mark.Score = (Double)mark.NumsOfTrue / mark.TotalQuest * 10;
+            mark.Score = (Double)numsOfTrue / examQuestion.Count * 10;
 
             return mark;
         }

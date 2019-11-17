@@ -17,7 +17,8 @@ namespace Web.Services.ScoreService
     public interface IScoreService : ITransientService
     {
         Score Get(Guid examId, Guid userId);
-        ReviewExamDTO Update(ExamAnswerDTO examAnswer, Guid userId); 
+        ReviewExamDTO Update(ExamAnswerDTO examAnswer, Guid userId);
+        string GetAnswerContent(Guid examId, Guid userId);
     }
     public class ScoreService : IScoreService
     {
@@ -42,6 +43,11 @@ namespace Web.Services.ScoreService
         public Score Get(Guid examId, Guid userId)
         {
             return scoreRepository.Get(examId, userId, examService.IsRandom(examId));
+        }
+
+        public string GetAnswerContent(Guid examId, Guid userId)
+        {
+            return scoreRepository.Get(examId, userId, examService.IsRandom(examId)).AnswerContent;
         }
 
         public ReviewExamDTO Update(ExamAnswerDTO examAnswer, Guid userId)

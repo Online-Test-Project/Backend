@@ -7,9 +7,7 @@ namespace Web.Controllers.ReviewController
         public Guid ExamId;
         public String Name;
         public String TimeSpent;
-        public Double Score;
+        public double Score;
         public String Date;
-        public int NumsOfTrue;
-        public int TotalQuest;
     }    
 }
