@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Common;
@@ -70,8 +71,10 @@ namespace Web.Services.ExamineeService
                     IsRandom = true,
                     Name = randomExam.Name,
                     Time = randomExam.Time,
-                    StartTime = randomExam.StartTime,
-                    EndTime = randomExam.EndTime,
+
+                    StartTime = DateTime.ParseExact(randomExam.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    EndTime = DateTime.ParseExact(randomExam.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+
                     Status = ExamStatus(randomExam.StartTime, randomExam.EndTime)
                 };
             }
@@ -83,8 +86,10 @@ namespace Web.Services.ExamineeService
                     IsRandom = false,
                     Name = examDetail.Name,
                     Time = examDetail.Time,
-                    StartTime = examDetail.StartTime,
-                    EndTime = examDetail.EndTime,
+
+                    StartTime = DateTime.ParseExact(examDetail.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    EndTime = DateTime.ParseExact(examDetail.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+
                     Status = ExamStatus(examDetail.StartTime, examDetail.EndTime)
                 };
             }
