@@ -87,8 +87,8 @@ namespace Web.Services.ExamineeService
                     Name = examDetail.Name,
                     Time = examDetail.Time,
 
-                    StartTime = DateTime.ParseExact(randomExam.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
-                    EndTime = DateTime.ParseExact(randomExam.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    StartTime = DateTime.ParseExact(examDetail.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    EndTime = DateTime.ParseExact(examDetail.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
 
                     Status = ExamStatus(examDetail.StartTime, examDetail.EndTime)
                 };
