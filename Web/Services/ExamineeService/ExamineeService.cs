@@ -120,7 +120,7 @@ namespace Web.Services.ExamineeService
                         Time = String.Empty
                     }) ;
                     
-                    return examRepository.GetRandomExam(examId).Time;
+                    return examRepository.GetRandomExam(examId).Time + ":00";
                 }
                 else
                 {
@@ -135,16 +135,17 @@ namespace Web.Services.ExamineeService
                         UserId = userId,
                         Time = String.Empty
                     });
-                    return examRepository.Get(examId).Time;
+                    return examRepository.Get(examId).Time + ":00";
                 }
             }
             else
             {
                 Score recordedScore = scoreRepository.Get(examId, userId, isRandom);
                 var timeSpent = DateTime.Now - DateTime.Parse(startTime);
-                string examTimeInString = isRandom ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time;
-                TimeSpan examTime = TimeSpan.Parse(examTimeInString);
-                return (timeSpent < examTime && recordedScore.Time.Equals(String.Empty)) ? (examTime - timeSpent).ToString() : String.Empty;
+                TimeSpan examTime = TimeSpan.FromMinutes(Double.Parse(isRandom ? examRepository.GetRandomExam(examId).Time : examRepository.Get(examId).Time));
+                TimeSpan remainTime = examTime - timeSpent;
+                string result = (remainTime.Hours * 60 + remainTime.Minutes) + ":" + remainTime.Seconds;
+                return (timeSpent < examTime && recordedScore.Time.Equals(String.Empty)) ? result : String.Empty;
             }
         }
 
