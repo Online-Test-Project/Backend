@@ -22,6 +22,7 @@ namespace Web.Services.ExamineeService
         PasswordExamDTO GetRandomExam(Guid examId);
         ReviewExamDTO CalculateMark(ExamAnswerDTO examAnswer, Guid userId);
         bool GetQuestionState(Guid questionId);
+        string ExamStatus(string startTime, string endTime);
     }
     public class ExamineeService : IExamineeService
     {
@@ -31,7 +32,7 @@ namespace Web.Services.ExamineeService
         private IExamService examService;
         private IScoreRepository scoreRepository;
         private IBankService bankService;
-        private static IDictionary<Guid, bool> QuestionState = new Dictionary<Guid, bool>();
+        public static IDictionary<Guid, bool> QuestionState = new Dictionary<Guid, bool>();
         public ExamineeService(IAnswerRepository answerRepository, IQuestionRepository questionRepository, IExamRepository examRepository, IExamService examService, IScoreRepository socreRepository, IBankService bankService)
         {
             this.answerRepository = answerRepository;
@@ -44,7 +45,7 @@ namespace Web.Services.ExamineeService
 
         public PasswordExamDTO Access(AccessExamDTO access, Guid userId)
         {
-            PasswordExamDTO returnDTO = new PasswordExamDTO();
+            PasswordExamDTO returnDTO;
             returnDTO = examService.IsRandom(access.Id) ? GetRandomExam(access.Id) : GetFixedExam(access.Id);
             return returnDTO;
         }
@@ -60,27 +61,43 @@ namespace Web.Services.ExamineeService
 
         public NoPasswordExamDTO Get(Guid Id)
         {
+            NoPasswordExamDTO result;
             if (examService.IsRandom(Id))
             {
                 RandomExam randomExam = examRepository.GetRandomExam(Id);
-                return new NoPasswordExamDTO
+                result = new NoPasswordExamDTO
                 {
                     IsRandom = true,
                     Name = randomExam.Name,
                     Time = randomExam.Time,
                     StartTime = randomExam.StartTime,
-                    EndTime = randomExam.EndTime
+                    EndTime = randomExam.EndTime,
+                    Status = ExamStatus(randomExam.StartTime, randomExam.EndTime)
                 };
             }
-            var examDetail = examRepository.Get(Id);
-            return new NoPasswordExamDTO
+            else
             {
-                IsRandom = false,
-                Name = examDetail.Name,
-                Time = examDetail.Time,
-                StartTime = examDetail.StartTime,
-                EndTime = examDetail.EndTime
-            };
+                var examDetail = examRepository.Get(Id);
+                result = new NoPasswordExamDTO
+                {
+                    IsRandom = false,
+                    Name = examDetail.Name,
+                    Time = examDetail.Time,
+                    StartTime = examDetail.StartTime,
+                    EndTime = examDetail.EndTime,
+                    Status = ExamStatus(examDetail.StartTime, examDetail.EndTime)
+                };
+            }
+            return result;
+        }
+
+        public string ExamStatus(string startTime, string endTime)
+        {
+            if (DateTime.Now < DateTime.Parse(startTime))
+            {
+                return "early";
+            }
+            return DateTime.Now < DateTime.Parse(endTime) ? "intime" : "late";
         }
 
         public string TimeRemain(Guid examId, Guid userId)
@@ -174,10 +191,9 @@ namespace Web.Services.ExamineeService
             ReviewExamDTO mark = new ReviewExamDTO();
             mark.TimeSpent = CalculateTimeSpent(examAnswer.ExamId, userId);
             int numsOfTrue = 0;
-            var examQuestion = questionRepository.ListByExamId(examAnswer.ExamId);
             examAnswer.AnswerDetails.ForEach(answer =>
             {
-                var key = examQuestion.Where(x => x.Id == answer.QuestionId).FirstOrDefault();
+                var key = questionRepository.GetById(answer.QuestionId);
                 if (key.Type == 3)
                 {
                     if (answer.Content.Equals(key.Content))
@@ -201,8 +217,7 @@ namespace Web.Services.ExamineeService
                     QuestionState.Add(key.Id, false);
                 }
             });
-            QuestionState.Clear();
-            mark.Score = (Double)numsOfTrue / examQuestion.Count * 10;
+            mark.Score = ((Double) numsOfTrue) / examRepository.Count(examAnswer.ExamId, examService.IsRandom(examAnswer.ExamId)) * 10;
 
             return mark;
         }

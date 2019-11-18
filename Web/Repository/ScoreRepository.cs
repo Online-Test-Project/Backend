@@ -53,7 +53,7 @@ namespace Web.Repository
 
         public string GetTimeStamp(Guid examId, Guid userId)
         {
-            var recoredTime = DbContext.Scores.Where(x => x.ExamId == examId && x.UserId == userId);
+            var recoredTime = DbContext.Scores.Where(x => (x.RandomExamId == examId || x.ExamId == examId) && x.UserId == userId);
             if (recoredTime.Count() == 0)
             {
                 return String.Empty;

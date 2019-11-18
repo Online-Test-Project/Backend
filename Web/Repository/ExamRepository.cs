@@ -13,7 +13,7 @@ namespace Web.Repository
     {
         Exam Get(Guid examId);
         List<Exam> ListByUserId(Guid userId);
-        int Count(Guid examId);
+        int Count(Guid examId, bool IsRandom);
         bool Create(ExamDTO exam, Guid userId);
         bool CreateRandom(RandomExamDTO randomExamDTO, Guid userId);
         List<RandomExam> ListRandomByUserId(Guid userId);
@@ -64,8 +64,13 @@ namespace Web.Repository
             }
         }
 
-        public int Count(Guid examId)
+        public int Count(Guid examId, bool IsRandom)
         {
+            if (IsRandom)
+            {
+                RandomExam randomExam = GetRandomExam(examId);
+                return randomExam.NumberOfEasyQuestion + randomExam.NumberOfNormalQuestion + randomExam.NumberOfHardQuestion;
+            }
             return DbContext.ExamQuestions.Where(x => x.ExamId == examId).Count();
         }
 

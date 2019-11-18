@@ -12,5 +12,6 @@ namespace Web.Controllers.ExamineeController
         public bool IsRandom;
         public string StartTime;
         public string EndTime;
+        public string Status;
     }
 }

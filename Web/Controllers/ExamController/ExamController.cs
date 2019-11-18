@@ -103,7 +103,7 @@ namespace Web.Controllers.ExamController
                 IsRandom = false,
                 StartTime = x.StartTime,
                 EndTime = x.EndTime,
-                Count = examRepository.Count(x.Id)
+                Count = examRepository.Count(x.Id, false)
             }));
 
             examRepository.ListRandomByUserId(user.Id).ForEach(x => responseList.Add(new ExamDetailDTO
@@ -116,7 +116,7 @@ namespace Web.Controllers.ExamController
                 IsRandom = true,
                 StartTime = x.StartTime,
                 EndTime = x.EndTime,
-                Count = x.NumberOfEasyQuestion + x.NumberOfHardQuestion + x.NumberOfNormalQuestion
+                Count = examRepository.Count(x.Id, true)
             }));
 
             return responseList;

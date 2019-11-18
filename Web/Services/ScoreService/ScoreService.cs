@@ -61,7 +61,7 @@ namespace Web.Services.ScoreService
             score.Time = mark.TimeSpent;
             score.AnswerContent = AnswerContentJSONToString(examAnswer, score.Score1, score.Time);
             scoreRepository.Update(score);
-
+            ExamineeService.ExamineeService.QuestionState.Clear();
             return mark;
         }
 
