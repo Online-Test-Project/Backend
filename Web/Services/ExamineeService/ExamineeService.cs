@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.AppStart;
 using Web.Common;
 using Web.Controllers.ExamineeController;
 using Web.Controllers.ReviewController;
@@ -65,6 +66,10 @@ namespace Web.Services.ExamineeService
             NoPasswordExamDTO result;
             if (examService.IsRandom(Id))
             {
+                if (examRepository.Get(Id) == null && examRepository.GetRandomExam(Id) == null)
+                {
+                    throw new BadRequestException("Đề không tồn tại");
+                }
                 RandomExam randomExam = examRepository.GetRandomExam(Id);
                 result = new NoPasswordExamDTO
                 {
@@ -72,8 +77,8 @@ namespace Web.Services.ExamineeService
                     Name = randomExam.Name,
                     Time = randomExam.Time,
 
-                    StartTime = DateTime.ParseExact(randomExam.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
-                    EndTime = DateTime.ParseExact(randomExam.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    StartTime = DateTime.ParseExact(randomExam.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
+                    EndTime = DateTime.ParseExact(randomExam.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
 
                     Status = ExamStatus(randomExam.StartTime, randomExam.EndTime)
                 };
@@ -87,8 +92,8 @@ namespace Web.Services.ExamineeService
                     Name = examDetail.Name,
                     Time = examDetail.Time,
 
-                    StartTime = DateTime.ParseExact(examDetail.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
-                    EndTime = DateTime.ParseExact(examDetail.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToString("dd-MM-yyyy hh:mm:ss"),
+                    StartTime = DateTime.ParseExact(examDetail.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
+                    EndTime = DateTime.ParseExact(examDetail.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
 
                     Status = ExamStatus(examDetail.StartTime, examDetail.EndTime)
                 };

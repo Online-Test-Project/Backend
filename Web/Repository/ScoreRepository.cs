@@ -14,6 +14,7 @@ namespace Web.Repository
         Score Get(Guid examId, Guid userId, bool IsRandom);
         bool Update(Score score);
         List<Score> List(Guid userId);
+        void Delete(Guid userId, Guid examId);
     }
     public class ScoreRepository : IScoreRepository
     {
@@ -36,6 +37,16 @@ namespace Web.Repository
             {
                 Console.WriteLine(e);
                 return false;
+            }
+        }
+
+        public void Delete(Guid userId, Guid examId)
+        {
+            var query = DbContext.Scores.Where(x => x.UserId == userId && (x.ExamId == examId || x.RandomExamId == examId)).FirstOrDefault();
+            if (query != null)
+            {
+                DbContext.Scores.Remove(query);
+                DbContext.SaveChanges();
             }
         }
 

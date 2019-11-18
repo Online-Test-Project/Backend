@@ -43,7 +43,7 @@ namespace Web.Controllers.ExamineeController
             {
                 return BadRequest("Bad password");
             }
-
+            scoreService.Delete(user.Id, accessExam.Id);
             string timeRemain = examineeService.TimeRemain(accessExam.Id, user.Id);
             if (timeRemain.Equals(String.Empty))
             {

@@ -19,6 +19,7 @@ namespace Web.Services.ScoreService
         Score Get(Guid examId, Guid userId);
         ReviewExamDTO Update(ExamAnswerDTO examAnswer, Guid userId);
         string GetAnswerContent(Guid examId, Guid userId);
+        void Delete(Guid userId, Guid examId);
     }
     public class ScoreService : IScoreService
     {
@@ -38,6 +39,15 @@ namespace Web.Services.ScoreService
             this.answerRepository = answerRepository;
             this.questionRepository = questionRepository;
             this.examRepository = examRepository;
+        }
+
+        public void Delete(Guid userId, Guid examId)
+        {
+            var ownerId = examService.IsRandom(examId) ? examRepository.GetRandomExam(examId).OwnerId : examRepository.Get(examId).OwnerId;
+            if (ownerId == userId)
+            {
+                scoreRepository.Delete(userId, examId);
+            }
         }
 
         public Score Get(Guid examId, Guid userId)
