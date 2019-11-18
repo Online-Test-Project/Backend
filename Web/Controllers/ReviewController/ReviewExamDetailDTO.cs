@@ -8,6 +8,6 @@ namespace Web.Controllers.ReviewController
         public string Name;
         public string Time;
         public Double Score;
-        public List<ReviewQuestionDTO> ReviewQuestions;
+        public List<ReviewQuestionDTO> ReviewQuestions = new List<ReviewQuestionDTO>();
     }
 }

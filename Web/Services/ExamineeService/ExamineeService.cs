@@ -184,21 +184,24 @@ namespace Web.Services.ExamineeService
                     {
                         QuestionState.Add(key.Id, true);
                         numsOfTrue++;
-                    }
+                    } 
                 }
                 else
                 {
-                    var userAnswers = answer.UserAnswers.Select(x => x.AnswerId).OrderBy(x => x).ToList();
-                    var trueAnswers = answerRepository.ListByQuestionId(key.Id).Select(x => x.Id).OrderBy(x => x).ToList();
+                    var userAnswers = answer.UserAnswers.Where(x => x.IsSelected == true).Select(x => x.AnswerId).OrderBy(x => x).ToList();
+                    var trueAnswers = answerRepository.ListByQuestionId(key.Id).Where(x => x.IsCorrect == true).Select(x => x.Id).OrderBy(x => x).ToList();
                     if (string.Join("", userAnswers).Equals(string.Join("", trueAnswers)))
                     {
                         QuestionState.Add(key.Id, true);
                         numsOfTrue++;
                     }
                 }
-                QuestionState.Add(key.Id, false);
+                if (!QuestionState.ContainsKey(key.Id))
+                {
+                    QuestionState.Add(key.Id, false);
+                }
             });
-
+            QuestionState.Clear();
             mark.Score = (Double)numsOfTrue / examQuestion.Count * 10;
 
             return mark;
