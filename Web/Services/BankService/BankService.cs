@@ -60,7 +60,7 @@ namespace Web.Services.BankService
             int totalQuest = listQuestionByBank.Count;
             if (totalQuest == 0)
             {
-                return null;
+                return new List<ExamineeQuestionDTO>();
             }
 
             listQuestionByBank = ShuffleList(listQuestionByBank);

@@ -61,6 +61,7 @@ namespace Web.Repository
         {
             try
             {
+                updatedBank.ModifiedDate = DateTime.Now.Date;
                 DbContext.QuestionBanks.Update(updatedBank);
                 DbContext.SaveChanges();
                 return true;

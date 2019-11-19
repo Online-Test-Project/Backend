@@ -104,6 +104,10 @@ namespace Web.Services.ScoreService
                         IsSelected = userQuestion.UserAnswers[answerIndex].IsSelected
                     });
                 }
+                reviewAnswers.Add(new ReviewAnswerDTO
+                {
+                    Content = userQuestion.Content                    
+                });
 
                 var questionInDb = questionRepository.GetById(userQuestion.QuestionId);
 
