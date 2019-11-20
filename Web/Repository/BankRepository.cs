@@ -94,7 +94,7 @@ namespace Web.Repository
         public List<int> CountByType(Guid bankId)
         {
             List<int> result = new List<int>();
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 result.Add(DbContext.Questions.Where(x => x.BankId == bankId && x.Type == i).Count());
             }
