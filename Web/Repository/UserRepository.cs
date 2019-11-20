@@ -16,6 +16,8 @@ namespace Web.Repository
         int CountByUsername(string username);
 
         bool Create(UserDTO userDTO);
+
+        User Get(Guid id);
     }
     public class UserRepository : IUserRepository
     {
@@ -29,6 +31,11 @@ namespace Web.Repository
         public int CountByUsername(string username)
         {
             return DbContext.Users.Where(x => x.Username == username).Count();
+        }
+
+        public User Get(Guid id)
+        {
+            return DbContext.Users.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public bool Create(UserDTO userDTO)

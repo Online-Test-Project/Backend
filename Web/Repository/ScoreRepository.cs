@@ -13,8 +13,9 @@ namespace Web.Repository
         bool Create(Score score);
         Score Get(Guid examId, Guid userId, bool IsRandom);
         bool Update(Score score);
-        List<Score> List(Guid userId);
+        List<Score> ListByUserId(Guid userId);
         void Delete(Guid userId, Guid examId);
+        List<Score> ListByExamId(Guid examId);
     }
     public class ScoreRepository : IScoreRepository
     {
@@ -75,7 +76,12 @@ namespace Web.Repository
             }
         }
 
-        public List<Score> List(Guid userId)
+        public List<Score> ListByExamId(Guid examId)
+        {
+            return DbContext.Scores.Where(x => x.ExamId == examId || x.RandomExamId == examId).ToList();
+        }
+
+        public List<Score> ListByUserId(Guid userId)
         {
             return DbContext.Scores.Where(x => x.UserId == userId).ToList();
         }

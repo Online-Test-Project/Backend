@@ -37,7 +37,7 @@ namespace Web.Services.ReviewService
 
         public List<ReviewExamDTO> List(Guid userId)
         {
-            var scoreList = scoreRepository.List(userId);
+            var scoreList = scoreRepository.ListByUserId(userId);
             List<ReviewExamDTO> myList = new List<ReviewExamDTO>();
             scoreList.ForEach(x =>
             {
