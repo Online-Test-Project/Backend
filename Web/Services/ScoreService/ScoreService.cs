@@ -96,11 +96,13 @@ namespace Web.Services.ScoreService
                 List<ReviewAnswerDTO> reviewAnswers = new List<ReviewAnswerDTO>();
 
                 var userQuestion = examAnswer.AnswerDetails[questionIndex];
+                var questionInDb = questionRepository.GetById(userQuestion.QuestionId);
+
                 for (int answerIndex = 0; answerIndex < userQuestion.UserAnswers.Count; answerIndex++)
                 {
                     reviewAnswers.Add(new ReviewAnswerDTO
                     {
-                        Content = answerRepository.Get(userQuestion.UserAnswers[answerIndex].AnswerId).Content,
+                        Content = (questionInDb.Type == 3)? userQuestion.Content : answerRepository.Get(userQuestion.UserAnswers[answerIndex].AnswerId).Content,
                         IsSelected = userQuestion.UserAnswers[answerIndex].IsSelected
                     });
                 }
@@ -109,7 +111,6 @@ namespace Web.Services.ScoreService
                 //    Content = userQuestion.Content                    
                 //});
 
-                var questionInDb = questionRepository.GetById(userQuestion.QuestionId);
 
                 reviewQuestion.Content = userQuestion.Content;
                 reviewQuestion.IsCorrect = examineeService.GetQuestionState(userQuestion.QuestionId);
