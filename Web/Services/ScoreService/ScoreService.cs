@@ -104,14 +104,14 @@ namespace Web.Services.ScoreService
                         IsSelected = userQuestion.UserAnswers[answerIndex].IsSelected
                     });
                 }
-                reviewAnswers.Add(new ReviewAnswerDTO
-                {
-                    Content = userQuestion.Content                    
-                });
+                //reviewAnswers.Add(new ReviewAnswerDTO
+                //{
+                //    Content = userQuestion.Content                    
+                //});
 
                 var questionInDb = questionRepository.GetById(userQuestion.QuestionId);
 
-                reviewQuestion.Content = questionInDb.Content;
+                reviewQuestion.Content = userQuestion.Content;
                 reviewQuestion.IsCorrect = examineeService.GetQuestionState(userQuestion.QuestionId);
                 reviewQuestion.ReviewAnswers = reviewAnswers;
                 reviewQuestion.Type = questionInDb.Type;
