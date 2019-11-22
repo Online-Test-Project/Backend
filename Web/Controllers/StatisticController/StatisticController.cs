@@ -24,40 +24,31 @@ namespace Web.Controllers.StatisticController
 
         }
 
-        public StatisticController()
-        {
-
-        }
-
-        [HttpPost, Route("/statistics")]
+        [HttpPost, Route("statistics")]
         public StatisticsDTO Statistics([FromBody] Guid examId)
         {
             return statisticService.GetStatistics(examId);
         }
 
-        [HttpPost, Route("/line-chart")]
+        [HttpPost, Route("line-chart")]
         public List<int> LineChart([FromBody] LineChartDTO lineChartDTO)
         {
             return statisticService.GetLineChart(lineChartDTO);
         }
 
-        [HttpPost, Route("/pie-chart")]
-        public List<double> PieChart([FromBody] Guid examId)
+        [HttpPost, Route("pie-chart")]
+        public List<int> PieChart([FromBody] Guid examId)
         {
             return statisticService.GetPieChart(examId);
         }
 
-        [HttpPost, Route("/progressbar")]
-        public List<double> ProgressBar([FromBody] Guid examId)
+        [HttpPost, Route("progressbar")]
+        public CorrectPercentDTO ProgressBar([FromBody] Guid examId)
         {
-            List<double> result = new List<double>();
-            result.Add(0.34);
-            result.Add(0.43);
-            result.Add(0.4);
-            return result;
+            return statisticService.GetCorrectPercent(examId);
         }
 
-        [HttpPost, Route("/participant")]
+        [HttpPost, Route("participant")]
         public List<ParticipantDTO> Participant([FromBody] SortParticipantDTO sortParticipantDTO)
         {
             return statisticService.GetParticipants(sortParticipantDTO);

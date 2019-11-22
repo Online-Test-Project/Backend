@@ -7,11 +7,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Web.AppStart;
+using Web.Common;
 using Web.Models;
 
 namespace Web.Repository
 {
-    public interface IUserRepository
+    public interface IUserRepository : ITransientService
     {
         int CountByUsername(string username);
 

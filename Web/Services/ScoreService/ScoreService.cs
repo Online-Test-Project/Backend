@@ -67,7 +67,7 @@ namespace Web.Services.ScoreService
             mark.ExamId = examAnswer.ExamId;
 
             Score score = Get(examAnswer.ExamId, userId);
-            score.Score1 = mark.Score;
+            score.Score1 = Math.Round(mark.Score, 2, MidpointRounding.AwayFromZero);
             score.Time = mark.TimeSpent;
             score.AnswerContent = AnswerContentJSONToString(examAnswer, score.Score1, score.Time);
             scoreRepository.Update(score);
@@ -121,6 +121,7 @@ namespace Web.Services.ScoreService
                 reviewQuestion.IsCorrect = examineeService.GetQuestionState(userQuestion.QuestionId);
                 reviewQuestion.ReviewAnswers = reviewAnswers;
                 reviewQuestion.Type = questionInDb.Type;
+                reviewQuestion.Difficulty = questionInDb.Difficulty;
 
                 reviewExamDetail.ReviewQuestions.Add(reviewQuestion);
             }

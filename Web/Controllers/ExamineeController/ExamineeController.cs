@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Controllers.ReviewController;
+using Web.Models;
 using Web.Repository;
 using Web.Services.ExamineeService;
 //using Web.Services.ExamineeService;
@@ -33,7 +34,13 @@ namespace Web.Controllers.ExamineeController
         [HttpGet, Route("{Id}")]
         public NoPasswordExamDTO Get(Guid Id)
         {
-            return examineeService.Get(Id);
+            NoPasswordExamDTO result = examineeService.Get(Id);
+            Score score = scoreService.Get(Id, user.Id);
+            if (score != null && !score.AnswerContent.Equals(""))
+            {
+                result.Status = "done";
+            }
+            return result;
         }
 
         [HttpPost]
