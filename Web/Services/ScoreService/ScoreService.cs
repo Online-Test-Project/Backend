@@ -75,7 +75,7 @@ namespace Web.Services.ScoreService
             return mark;
         }
 
-        private string AnswerContentJSONToString(ExamAnswerDTO examAnswer, double score,  string time)
+        private string AnswerContentJSONToString(ExamAnswerDTO examAnswer, double score, string time)
         {
             ReviewExamDetailDTO reviewExamDetail = new ReviewExamDetailDTO();
             reviewExamDetail.Name = examService.IsRandom(examAnswer.ExamId) ? examRepository.GetRandomExam(examAnswer.ExamId).Name : examRepository.Get(examAnswer.ExamId).Name;
@@ -97,22 +97,27 @@ namespace Web.Services.ScoreService
 
                 var userQuestion = examAnswer.AnswerDetails[questionIndex];
                 var questionInDb = questionRepository.GetById(userQuestion.QuestionId);
-
-                for (int answerIndex = 0; answerIndex < userQuestion.UserAnswers.Count; answerIndex++)
+                if (questionInDb.Type == 3)
                 {
                     reviewAnswers.Add(new ReviewAnswerDTO
                     {
-                        Content = (questionInDb.Type == 3)? userQuestion.Content : answerRepository.Get(userQuestion.UserAnswers[answerIndex].AnswerId).Content,
-                        IsSelected = userQuestion.UserAnswers[answerIndex].IsSelected
+                        Content = userQuestion.Content
                     });
                 }
-                //reviewAnswers.Add(new ReviewAnswerDTO
-                //{
-                //    Content = userQuestion.Content                    
-                //});
+                else
+                {
+                    for (int answerIndex = 0; answerIndex < userQuestion.UserAnswers.Count; answerIndex++)
+                    {
+                        reviewAnswers.Add(new ReviewAnswerDTO
+                        {
+                            Content = answerRepository.Get(userQuestion.UserAnswers[answerIndex].AnswerId).Content,
+                            IsSelected = userQuestion.UserAnswers[answerIndex].IsSelected
+                        });
+                    }
+                }
 
 
-                reviewQuestion.Content = userQuestion.Content;
+                reviewQuestion.Content = questionInDb.Content;
                 reviewQuestion.IsCorrect = examineeService.GetQuestionState(userQuestion.QuestionId);
                 reviewQuestion.ReviewAnswers = reviewAnswers;
                 reviewQuestion.Type = questionInDb.Type;
@@ -123,6 +128,6 @@ namespace Web.Services.ScoreService
             return JsonConvert.SerializeObject(reviewExamDetail);
         }
 
-        
+
     }
 }
