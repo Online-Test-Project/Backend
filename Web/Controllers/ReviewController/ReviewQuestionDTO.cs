@@ -8,5 +8,6 @@ namespace Web.Controllers.ReviewController
         public bool IsCorrect;
         public List<ReviewAnswerDTO> ReviewAnswers;
         public int Type;
+        public int Difficulty;
     }
 }
