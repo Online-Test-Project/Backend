@@ -160,18 +160,18 @@ namespace Web.Services.StatisticService
             {
                 switch (sortParticipantDTO.SortField)
                 {
-                    case 1: result.OrderBy(x => x.Username); break;
-                    case 2: result.OrderBy(x => x.Score); break;
-                    case 3: result.OrderBy(x => x.Time); break;
+                    case 1: return result.OrderBy(x => x.Username).ToList(); 
+                    case 2: return result.OrderBy(x => x.Score).ToList(); 
+                    case 3: return result.OrderBy(x => x.Time).ToList(); 
                 }
             }
             else
             {
                 switch (sortParticipantDTO.SortField)
                 {
-                    case 1: result.OrderByDescending(x => x.Username); break;
-                    case 2: result.OrderByDescending(x => x.Score); break;
-                    case 3: result.OrderByDescending(x => x.Time); break;
+                    case 1: return result.OrderByDescending(x => x.Username).ToList(); 
+                    case 2: return result.OrderByDescending(x => x.Score).ToList();
+                    case 3: return result.OrderByDescending(x => x.Time).ToList(); 
                 }
             }
             
