@@ -60,7 +60,7 @@ namespace Web.Controllers.BankController
                 OwnerId = user.Id,
                 Name = bank.Name,
                 Description = bank.Description,
-                ModifiedDate = bank.ModifiedDate
+                ModifiedDate = DateTime.Now
             };
             return repository.Create(newBank);
         }

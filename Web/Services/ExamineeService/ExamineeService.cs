@@ -193,6 +193,7 @@ namespace Web.Services.ExamineeService
             examDTO.ExamineeQuestions.AddRange(bankService.ListRandomQuestion(bankId, exam.NumberOfHardQuestion, 3));
 
             examDTO.TimeRemaining = exam.Time;
+            examDTO.Name = exam.Name;
             return examDTO;
         }
 

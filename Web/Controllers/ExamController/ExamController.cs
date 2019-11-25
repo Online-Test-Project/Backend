@@ -144,7 +144,6 @@ namespace Web.Controllers.ExamController
         public PasswordExamDTO Generate([FromBody] Guid examId)
         {
             var response = examineeService.GetRandomExam(examId);
-            response.TimeRemaining = String.Empty;
             return response;
         }
     }
