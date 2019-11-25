@@ -228,7 +228,7 @@ namespace Web.Services.ExamineeService
                     QuestionState.Add(key.Id, false);
                 }
             });
-            mark.Score = ((Double) numsOfTrue) / examRepository.Count(examAnswer.ExamId, examService.IsRandom(examAnswer.ExamId)) * 10;
+            mark.Score = Math.Round(((Double) numsOfTrue) / examRepository.Count(examAnswer.ExamId, examService.IsRandom(examAnswer.ExamId)) * 10, 2, MidpointRounding.AwayFromZero);
 
             return mark;
         }

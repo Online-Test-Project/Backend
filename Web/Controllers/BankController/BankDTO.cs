@@ -11,7 +11,7 @@ namespace Web.Controllers.BankController
         public Guid Id { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public String ModifiedDate { get; set; }
 
     }
 }

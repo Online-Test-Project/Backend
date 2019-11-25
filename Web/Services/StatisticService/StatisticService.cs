@@ -152,8 +152,8 @@ namespace Web.Services.StatisticService
                 result.Add(new ParticipantDTO
                 {
                     Username = userRepository.Get(score.UserId).Username,
-                    Score = score.Score1,
-                    Time = score.Time
+                    Score = Math.Round(score.Score1, 2, MidpointRounding.AwayFromZero),
+                    Time = score.Time.Split('.')[0]
                 });
             }
             if (sortParticipantDTO.ASC)

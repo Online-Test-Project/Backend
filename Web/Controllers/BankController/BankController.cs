@@ -46,7 +46,7 @@ namespace Web.Controllers.BankController
                     Id = bank.Id,
                     Name = bank.Name,
                     Description = bank.Description,
-                    ModifiedDate = bank.ModifiedDate
+                    ModifiedDate = bank.ModifiedDate.ToString("dd/MM/yyyy")
                 });
             }
             return result;
@@ -74,7 +74,7 @@ namespace Web.Controllers.BankController
                 OwnerId = user.Id,
                 Name = bank.Name,
                 Description = bank.Description,
-                ModifiedDate = bank.ModifiedDate
+                ModifiedDate = DateTime.Now
             };
             return repository.Update(updatedBank);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -101,8 +102,8 @@ namespace Web.Controllers.ExamController
                 Description = x.Description,
                 Password = x.Password,
                 IsRandom = false,
-                StartTime = x.StartTime,
-                EndTime = x.EndTime,
+                StartTime = DateTime.ParseExact(x.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
+                EndTime = DateTime.ParseExact(x.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
                 Count = examRepository.Count(x.Id, false)
             }));
 
@@ -114,8 +115,8 @@ namespace Web.Controllers.ExamController
                 Description = x.Description,
                 Password = x.Password,
                 IsRandom = true,
-                StartTime = x.StartTime,
-                EndTime = x.EndTime,
+                StartTime = DateTime.ParseExact(x.StartTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
+                EndTime = DateTime.ParseExact(x.EndTime, CultureInfo.CurrentCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.CurrentCulture).ToLocalTime().ToString("dd-MM-yyyy HH:mm:ss"),
                 Count = examRepository.Count(x.Id, true)
             }));
 
