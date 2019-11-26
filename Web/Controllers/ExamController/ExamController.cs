@@ -97,7 +97,7 @@ namespace Web.Controllers.ExamController
             examRepository.ListByUserId(user.Id).ForEach(x => responseList.Add(new ExamDetailDTO
             {
                 Id = x.Id,
-                Time = x.Time,
+                Time = x.Time.Split('.')[0],
                 Name = x.Name,
                 Description = x.Description,
                 Password = x.Password,
@@ -110,7 +110,7 @@ namespace Web.Controllers.ExamController
             examRepository.ListRandomByUserId(user.Id).ForEach(x => responseList.Add(new ExamDetailDTO
             {
                 Id = x.Id,
-                Time = x.Time,
+                Time = x.Time.Split('.')[0],
                 Name = x.Name,
                 Description = x.Description,
                 Password = x.Password,
